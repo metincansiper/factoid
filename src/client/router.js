@@ -6,6 +6,7 @@ const uuid = require('uuid');
 const Editor = require('./components/editor');
 const Home = require('./components/home');
 const DocumentFiller = require('./components/document-filler');
+const DocumentFillerCompare = require('./components/document-filler-compare');
 
 
 let routes = [
@@ -33,6 +34,14 @@ let routes = [
     render: () => {
       return h('div.document-filler-page', [
         h( DocumentFiller )
+      ]);
+    }
+  },
+  {
+    path: '/new-document/compare',
+    render: () => {
+      return h('div.document-filler-page', [
+        h( DocumentFillerCompare )
       ]);
     }
   },

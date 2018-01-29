@@ -75,6 +75,8 @@ let runLayout = doc => {
   return Promise.try( runLayout ).then( savePositions ).then( getDoc );
 };
 
+let getReachOutput = text => provider.getRawResponse( text );
+
 // get existing doc
 http.get('/:id', function( req, res ){
   let id = req.params.id;
@@ -99,6 +101,14 @@ http.post('/', function( req, res ){
     .then( getDocJson )
     .then( json => res.json( json ) )
   );
+});
+
+http.post('/compare', function( req, res ){
+  let text = req.body.text;
+
+  getReachOutput( text )
+  .then( reachRes => reachRes.json() )
+  .then( reachJson => res.json(reachJson) );
 });
 
 module.exports = http;
