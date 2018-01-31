@@ -1,11 +1,16 @@
 const React = require('react');
 const h = require('react-hyperscript');
 const { Link } = require('react-router-dom');
-const Linkout = require('./document-linkout');
-const Promise = require('bluebird');
 const ReactDom = require('react-dom');
-const { makeClassList } = require('../../util');
+
 const anime = require('animejs');
+const Promise = require('bluebird');
+const _ = require('lodash');
+
+const { makeClassList } = require('../../util');
+
+const Linkout = require('./document-linkout');
+
 
 class DocumentFillerCompare extends React.Component {
   constructor( props ){
@@ -13,7 +18,8 @@ class DocumentFillerCompare extends React.Component {
 
     this.state = {
       submitting: false,
-      reachResponse: null
+      reachResponse: null,
+      reachQuery: ''
     };
   }
 
@@ -25,7 +31,7 @@ class DocumentFillerCompare extends React.Component {
   }
 
   getReachResponse(){
-    let text = ReactDom.findDOMNode(this).querySelector('.document-filler-text').value;
+    let text = this.state.reachQuery;
 
     let makeRequest = () => fetch('/api/document/compare', {
       headers: {
@@ -43,11 +49,30 @@ class DocumentFillerCompare extends React.Component {
     Promise.try( makeRequest ).then( toJson ).then( updateState );
   }
 
+  extractReachResponseInfo(){
+    let reachRes = this.state.reachResponse;
+    if( reachRes == null ){ return null; }
+
+    let entFrames = _.get( reachRes, ['entities', 'frames'], []).map( frame => frame.text );
+
+    return { entities: entFrames, interactions: [] };
+  }
+
   render(){
-    let reachResponse = this.state.reachResponse ? h('pre.document-filler-output', JSON.stringify(this.state.reachResponse, null, 2)) : null;
+    let reachResponse = this.extractReachResponseInfo();
+    let formattedReachResponse = reachResponse ? h('div', [
+      h('div', 'Entities'),
+      h('div', reachResponse.entities.map( entity => h('div', entity) )),
+      h('div', 'Interactions'),
+      h('div', reachResponse.interactions.map( interaction => h('div', interaction) ))
+    ]) : null;
+
     let rootChildren = [
       h('label.document-filler-text-label', 'Input for REACH'),
-      h('textarea.document-filler-text'),
+      h('textarea.document-filler-text', {
+        value: this.state.reachQuery,
+        onChange: e => this.setState({reachQuery: e.target.value})
+      }),
       h('div.document-filler-submit-line', [
         h('button.document-filler-submit', {
           onClick: () => this.getReachResponse()
@@ -59,7 +84,7 @@ class DocumentFillerCompare extends React.Component {
         })
       ]),
       h('label.document-filler-text-label', 'Output from REACH'),
-      reachResponse
+      formattedReachResponse
     ];
 
     let documentJson = this.state.documentJson;
