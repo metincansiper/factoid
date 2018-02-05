@@ -1,6 +1,7 @@
 @import "./vars.css";
 
 /* app styles */
+@import "./vendor/font-awesome.css";
 @import "./animations.css";
 @import "./base.css";
 @import "./tippy.css";
