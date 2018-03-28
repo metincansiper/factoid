@@ -6,9 +6,9 @@
 }
 
 .form-interaction {
-  /*padding-bottom: 10px;*/
+  padding-bottom: 10px;
   display: flex;
-  justify-content: space-between;
+  /*justify-content: space-between;*/
 }
 
 .form-action-buttons {
@@ -31,7 +31,6 @@
 .delete-interaction {
   border: none;
   color: #ED4A31;
-    /*margin-left: 50em;*/
 }
 
 
@@ -54,19 +53,39 @@
 .form-entity-title {
   margin: 0.5em;
 }
-.form-entity{
+
+.form-entity {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  width: 11em;
   height: 1.5em;
   margin: 0.5em;
 }
 
-.form-multiple-entity{
+.form-multiple-entity {
+  padding: 0.5em;
   height: 5em;
-  line-height: 100%
+  width: 12em;
+  line-height: 100%;
+  margin: 0.5em;
 }
-
 
 
 .form-options{
+  padding-left: 0.5em;
+  padding-right: 0.5em;
   height: 1.5em;
   margin: 0.5em;
+}
+
+.form-entity::placeholder{
+  font-style: italic;
+  font-weight: lighter;
+  font-family: Arial;
+}
+
+.form-multiple-entity::placeholder{
+  font-style: italic;
+  font-weight: lighter;
+  font-family: Arial;
 }
