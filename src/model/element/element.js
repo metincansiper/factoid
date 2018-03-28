@@ -63,6 +63,9 @@ class Element {
     });
   }
 
+  isSubtype(subtype){
+        return this.syncher.data.subtype === subtype;
+  }
   filled(){
     return this.syncher.filled;
   }

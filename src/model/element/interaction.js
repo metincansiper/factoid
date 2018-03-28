@@ -71,6 +71,7 @@ class Interaction extends Element {
 
   static type(){ return TYPE; }
 
+
   isInteraction(){ return true; }
 
   load( setup = _.noop ){

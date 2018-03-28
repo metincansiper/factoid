@@ -155,9 +155,10 @@ class Document {
     return this.elements().filter( el => el.isEntity() );
   }
 
-  interactions(){
-    return this.elements().filter( el => el.isInteraction() );
+  interactions(type){
+    return this.elements().filter( el => (el.isInteraction() && (!type || el.isSubtype(type))) );
   }
+
 
   organisms(){
     let orgIds = this.syncher.get('organisms');
