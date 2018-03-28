@@ -13,7 +13,8 @@ class ActionLogger extends React.Component {
     };
 
     this.state = {
-      history: []
+      history: [],
+      todos: []
     };
   }
 
@@ -89,11 +90,19 @@ class ActionLogger extends React.Component {
 
         if (evt === 'add') {
           logElementEvts(e);
+          this.setState({
+            todos: this.state.todos.concat(['ground unnamed entity'])
+          });
         }
       });
     });
 
     this.data.document.elements().forEach(logElementEvts);
+    this.setState({
+      todos: this.state.todos.concat(this.data.document.entities().filter(ent => !ent.associated()).map(ent => {
+        return `ground ${ent.name() ? ent.name() : 'unnamed entity'}`;
+      }))
+    });
   }
 
   render() {
@@ -101,7 +110,16 @@ class ActionLogger extends React.Component {
       return h('div', entry);
     });
 
-    return h('div.action-logger', history);
+    const todos = this.state.todos.map(todo => {
+      return h('div', todo);
+    });
+
+    return h('div.action-logger', [
+      h('div', 'ACTION HISTORY'),
+      ...history,
+      h('div', 'TODOS'),
+      ...todos
+    ]);
   }
 }
 
