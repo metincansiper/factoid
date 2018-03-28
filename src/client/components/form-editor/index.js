@@ -16,7 +16,8 @@ class EntityForm extends Component {
   constructor(props){
     super(props);
     this.state = this.data = {
-      entity: props.entity
+      entity: props.entity,
+        type: props.type
     };
   }
 
@@ -25,19 +26,31 @@ class EntityForm extends Component {
     this.forceUpdate();
   }
   render(){
-    return h('input[type="text"].form-entity', {
-      value: this.state.entity.name(),
-      placeholder: 'Enter entity name',
+    return h('div.form-interaction', [ h('h3.form-entity-title', this.state.type), h('input[type="text"].form-entity', {
+          value: this.state.entity.name(),
+        placeholder: 'Enter entity name',
       onChange: e => this.updateEntityName(e.target.value)
-    });
+    })]);
   }
+}
+
+class MultipleEntityForm extends EntityForm {
+
+    render(){
+        return h('div.form-interaction', [h('h3.form-entity-title', this.state.type), h('textarea.form-multiple-entity"', {
+
+            value: this.state.entity.name(),
+            placeholder: 'Enter entity list',
+            onChange: e => this.updateEntityName(e.target.value)
+        })]);
+    }
 }
 
 class InteractionForm extends Component {
   constructor(props){
     super(props);
     this.state = this.data = {
-      interaction: props.interaction
+      interaction: props.interaction,
     };
   }
 
@@ -47,31 +60,169 @@ class InteractionForm extends Component {
     this.forceUpdate();
   }
 
-  deleteInteraction() {
-    // TODO implement this
-  }
+  // deleteInteraction() {
+  //     const intn = this.state.interaction;
+  //
+  //   // TODO implement this
+  // }
 
-  render(){
-    const intn = this.state.interaction;
-    const lEnt = intn.elements()[0];
-    const rEnt = intn.elements()[1];
-
-    return h('div.form-interaction', [
-      h(EntityForm, { entity: lEnt }),
-      h('span', [
-        h('select', { value: intn.description(), onChange: e => this.updateInteractionType(e.target.value) }, [
-          h('option', { value: 'interacts with' }, 'interacts with'),
-          h('option', { value: 'phosphorylates' }, 'phosphorylates'),
-          h('option', { value: 'enzyme reaction' }, 'enzyme reaction'),
-          h('option', { value: 'other' }, 'other')
-        ])
-      ]),
-      h(EntityForm, { entity: rEnt } ),
-      h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
-    ]);
-  }
 }
 
+class ProteinModificationForm extends InteractionForm {
+    render(){
+        const intn = this.state.interaction;
+        const lEnt = intn.elements()[0];
+        const rEnt = intn.elements()[1];
+
+        return h('div.form-interaction', [
+            h(EntityForm, { entity: lEnt , type: 'Controller protein:'}),
+            h('span', [
+                h('select.form-options', { value: intn.description(), onChange: e => this.updateInteractionType(e.target.value) }, [
+                    h('option', { value: 'activates' }, 'activates'),
+                    h('option', { value: 'inhibits' }, 'inhibits'),
+                ])
+            ]),
+            h('span', [
+                h('select.form-options', { value: intn.description(), onChange: e => this.updateInteractionType(e.target.value) }, [
+                    h('option', { value: 'phosphorylation' }, 'phosphorylation'),
+                    h('option', { value: 'methylation' }, 'methylation'),
+                    h('option', { value: 'acetylation' }, 'acetylation'),
+                    h('option', { value: 'amidation' }, 'amidation'),
+                    h('option', { value: 'pyrrolidone carboxylic acid' }, 'pyrrolidone carboxylic acid'),
+                    h('option', { value: 'isomerization' }, 'isomerization'),
+                    h('option', { value: 'hydroxilation' }, 'hydroxilation'),
+                    h('option', { value: 'sulfation' }, 'sulfation'),
+                    h('option', { value: 'flavin-binding' }, 'flavin-binding'),
+                    h('option', { value: 'cysteine oxidation and nitrosylation' }, 'cysteine oxidation and nitrosylation'),
+                    h('option', { value: 'other' }, 'other')
+                ])
+            ]),
+            h(EntityForm, { entity: rEnt, type: 'Controlled protein:' } )
+            // h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
+        ]);
+    }
+
+}
+
+class ComplexInteractionForm extends InteractionForm {
+
+    render(){
+        const intn = this.state.interaction;
+        const lEnt = intn.elements()[0];
+
+        return h('div.form-interaction', [
+            h(MultipleEntityForm, { entity: lEnt , type: 'Molecule list:'})
+            // h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
+        ]);
+    }
+}
+
+class LocationChangeForm extends InteractionForm{
+
+    render(){
+        const intn = this.state.interaction;
+        const lEnt = intn.elements()[0];
+        const rEnt = intn.elements()[1];
+        const oldLocEnt = intn.elements()[2];
+        const newLocEnt = intn.elements()[3];
+
+        return h('div.form-interaction', [
+            h(EntityForm, { entity: lEnt , type: 'Controller protein:'}),
+            h('span', [
+                h('select.form-options', { value: intn.description(), onChange: e => this.updateInteractionType(e.target.value) }, [
+                    h('option', { value: 'activates' }, 'activates'),
+                    h('option', { value: 'inhibits' }, 'inhibits'),
+                ])
+            ]),
+            //TODO: will be separately added as ID and type
+            h(EntityForm, { entity: rEnt , type: 'Molecule list:'}),
+            h(EntityForm, { entity: oldLocEnt, type: 'Old location:' } ),
+            h(EntityForm, { entity: newLocEnt, type: 'New location:' } )
+            // h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
+        ]);
+    }
+}
+
+class BiochemicalReactionForm extends InteractionForm{
+
+    render(){
+        const intn = this.state.interaction;
+        const inputSmallMolecules = intn.elements()[0];
+        const catalyzer = intn.elements()[1];
+        const outputSmallMolecules = intn.elements()[2];
+
+        // return h('div', 'a');
+        return h('div.form-interaction', [
+            h(MultipleEntityForm, { entity: inputSmallMolecules , type: 'Input small molecules:'}),
+            h(EntityForm, { entity: catalyzer , type: 'Catalyzer:'}),
+            h(MultipleEntityForm, { entity: outputSmallMolecules , type: 'Output small molecules:'})
+
+            // h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
+        ]);
+    }
+}
+
+class PhysicalInteractionForm extends InteractionForm{
+
+    render(){
+            const intn = this.state.interaction;
+            const lEnt = intn.elements()[0];
+            const rEnt = intn.elements()[1];
+
+            return h('div.form-interaction', [
+                h(MultipleEntityForm, { entity: lEnt , type: 'Molecule list:'}),
+                h('h3.form-entity-title', 'interacts with'),
+                h(MultipleEntityForm, { entity: rEnt, type: 'Entity list:' } )
+                // h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
+            ]);
+    }
+
+}
+
+class ActivationInhibitionForm extends InteractionForm{
+
+    render(){
+        const intn = this.state.interaction;
+        const lEnt = intn.elements()[0];
+        const rEnt = intn.elements()[1];
+
+        return h('div.form-interaction', [
+            h(EntityForm, { entity: lEnt , type: 'Source protein:'}),
+            h('span', [
+                h('select.form-options', { value: intn.description(), onChange: e => this.updateInteractionType(e.target.value) }, [
+                    h('option', { value: 'activates' }, 'activates'),
+                    h('option', { value: 'inhibits' }, 'inhibits'),
+                ])
+            ]),
+            h(EntityForm, { entity: rEnt, type: 'Target protein:' } )
+            // h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
+        ]);
+
+    }
+}
+
+
+class ExpressionRegulationForm extends InteractionForm {
+
+    render(){
+            const intn = this.state.interaction;
+            const lEnt = intn.elements()[0];
+            const rEnt = intn.elements()[1];
+
+            return h('div.form-interaction', [
+                h(EntityForm, { entity: lEnt , type: 'Transcription factor:'}),
+                h('span', [
+                    h('select.form-options', { value: intn.description(), onChange: e => this.updateInteractionType(e.target.value) }, [
+                        h('option', { value: 'activates' }, 'activates expression'),
+                        h('option', { value: 'inhibits' }, 'inhibits expression'),
+                    ])
+                ]),
+                h(EntityForm, { entity: rEnt, type: 'Target protein:' } )
+                // h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
+            ]);
+
+        }
+}
 
 // TODO actually build a working UI that's hooked into the model
 class FormEditor extends Component {
@@ -133,14 +284,16 @@ class FormEditor extends Component {
     this.setState( obj, callback );
   }
 
-  addElement( data = {} ){
+  addElement( data){
 
     let doc = this.data.document;
+
 
     let el = doc.factory().make({
       data: _.assign( {
         type: 'entity',
-        name: '',
+        name: ''
+
       }, data )
     });
 
@@ -151,57 +304,119 @@ class FormEditor extends Component {
     );
   }
 
-  addInteraction( data = {} ){
+  addInteraction( data ){
 
     return this.addElement( _.assign({
-      type: 'interaction',
-      name: ''
+        type: 'interaction',
+        name: '',
+        subtype: data.subtype
     }, data) );
   }
+  deleteElement(el){
+      let doc = this.data.document;
+      Promise.try( () => doc.remove(el) );
+  }
 
-  addInteractionRow(){
+  //TODO
+  deleteInteractionRow(intn) {
+      let self = this;
 
-    let lEnt = this.addElement();
-    let rEnt = this.addElement();
-    let intn = this.addInteraction();
+      let elLength = intn.elements().length;
 
-    Promise.all([lEnt, rEnt, intn]).then(responses => {
-      let i = responses[2];
+      //let entArr = [];
+      // for(let i = 0; i < elLength; i++)
+      //     entArr.push(intn.elements()[i]);
+      // entArr.push(intn);
 
-      i.addParticipant(responses[0]);
-      i.addParticipant(responses[1]);
+
+      for(let i = 0; i < elLength; i++)
+          self.deleteElement(intn.elements[i]);
+    //
+    //   Promise.all(entArr).then(responses => {
+    //       let resp = responses[elLength];
+    //
+    //       for(let i = 0; i < elLength; i++)
+    //           resp.removeParticipant(responses[i]);
+    //
+    //
+    //       this.forceUpdate();
+    // });
+  }
+
+  addInteractionRow(data){
+      let self = this;
+      let entArr = [];
+
+      for(let i = 0; i < data.entityCnt; i++)
+          entArr.push(self.addElement());
+      entArr.push(this.addInteraction(data));
+
+    Promise.all(entArr).then(responses => {
+      let resp = responses[data.entityCnt];
+
+        for(let i = 0; i < data.entityCnt; i++)
+            resp.addParticipant(responses[i]);
 
       this.forceUpdate();
     });
 
   }
+  //TODO: link this to biopax model
+  submit(){
 
+  }
+    
   render(){
-    const doc = this.state.document;
-    const interactions = doc.interactions();
+      const doc = this.state.document;
+      let self = this;
 
-    const interactionForms = interactions.map(interaction => {
-      return h(InteractionForm, { interaction });
-    });
+      const forms = [
+        {type: 'PROTEIN_MODIFICATION' , clazz: ProteinModificationForm, entityCnt: 2},
+        {type:'COMPLEX_ASSOCIATION', clazz: ComplexInteractionForm, entityCnt: 1},
+        {type:'COMPLEX_DISSOCIATION', clazz: ComplexInteractionForm, entityCnt: 1},
+        {type:'LOCATION_CHANGE', clazz: LocationChangeForm, entityCnt: 4},
+        {type:'BIOCHEMICAL_REACTION', clazz: BiochemicalReactionForm, entityCnt: 3},
+        {type:'PHYSICAL_INTERACTION', clazz: PhysicalInteractionForm, entityCnt: 2},
+        {type:'ACTIVATION_INHIBITION', clazz:ActivationInhibitionForm, entityCnt: 2},
+        {type:'EXPRESSION_REGULATION', clazz: ExpressionRegulationForm, entityCnt: 2}
+      ];
 
-    return h('div.document-form.page-content', [
-      h('h1.form-editor-title', 'Insert Pathway Information As Text'),
-      ...interactionForms,
-      h('div.form-action-buttons', [
-        h('button.form-interaction-adder', { onClick: e => this.addInteractionRow() }, [
-          h('i.material-icons.add-new-interaction-icon', 'add'),
-          'ADD INTERACTION'
-        ]),
-        h('button.form-submit', { onClick: e => this.addInteractionRow() }, [
+      const hArr = [];
+
+      forms.forEach(function(form){
+          let formContent = doc.interactions(form.type).map(interaction => {
+            return h('div', [h('button.delete-interaction', {onClick: e => self.deleteInteractionRow(interaction) }, 'X'), h(form.clazz, {interaction})]);
+          });
+
+            //update form
+            let hFunc = h('div', [
+                h('h2', form.type),
+                ...formContent,
+                h('div.form-action-buttons', [
+                    h('button.form-interaction-adder', { onClick: e => self.addInteractionRow({subtype:form.type, entityCnt:form.entityCnt})}, [
+                        h('i.material-icons.add-new-interaction-icon', 'add'),
+                        'ADD INTERACTION'
+                    ])])
+            ]);
+            hArr.push(hFunc);
+
+      });
+
+
+      return h('div.document-form.page-content', [
+            h('h1.form-editor-title', 'Insert Pathway Information As Text'),
+              ...hArr,
+
+        h('button.form-submit', { onClick: e => this.submit() }, [
           'SUBMIT'
-        ])
-      ]),
+        ]),
+
       h(DocumentWizardStepper, {
         backEnabled: false,
         // TODO
       })
     ]);
-  }
+    }
 }
 
 module.exports = FormEditor;
