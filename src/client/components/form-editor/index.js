@@ -317,30 +317,18 @@ class FormEditor extends Component {
       Promise.try( () => doc.remove(el) );
   }
 
-  //TODO
   deleteInteractionRow(intn) {
-      let self = this;
+      let doc = this.data.document;
 
-      let elLength = intn.elements().length;
-
-      //let entArr = [];
-      // for(let i = 0; i < elLength; i++)
-      //     entArr.push(intn.elements()[i]);
-      // entArr.push(intn);
+      let els = intn.elements();
+      let elsLength = els.length;
 
 
-      for(let i = 0; i < elLength; i++)
-          self.deleteElement(intn.elements[i]);
-    //
-    //   Promise.all(entArr).then(responses => {
-    //       let resp = responses[elLength];
-    //
-    //       for(let i = 0; i < elLength; i++)
-    //           resp.removeParticipant(responses[i]);
-    //
-    //
-    //       this.forceUpdate();
-    // });
+      for(let i = 0; i < elsLength; i++)
+          intn.removeParticipant(els[i]);
+
+      doc.remove(intn);
+      this.forceUpdate();
   }
 
   addInteractionRow(data){
@@ -385,6 +373,7 @@ class FormEditor extends Component {
 
       forms.forEach(function(form){
           let formContent = doc.interactions(form.type).map(interaction => {
+              console.log(interaction.elements());
             return h('div', [h('button.delete-interaction', {onClick: e => self.deleteInteractionRow(interaction) }, 'X'), h(form.clazz, {interaction})]);
           });
 
