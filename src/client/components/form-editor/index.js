@@ -12,9 +12,6 @@ const Document = require('../../../model/document');
 const DocumentWizardStepper = require('../document-wizard-stepper');
 
 
-
-
-
 class EntityForm extends Component {
   constructor(props) {
     super(props);
@@ -366,8 +363,8 @@ class FormEditor extends Component {
   addInteraction( data ){
     return this.addElement( _.assign({
         type: 'interaction',
-        name: '',
-        subtype: data.subtype
+        name: data.name,
+        description: data.name
     }, data) );
   }
 
@@ -393,7 +390,7 @@ class FormEditor extends Component {
     });
 
   }
-  //TODO: link this to biopax model
+  //TODO: This will test validity of entries and open the editor if valid i,e, all the fields are filled etc.
   submit(){
 
     //Test validity
@@ -420,8 +417,11 @@ class FormEditor extends Component {
 
     forms.forEach(function(form){
 
-      let formContent = doc.interactions(form.type).map(interaction => {
-        return h(form.clazz, {document:doc, interaction:interaction});
+
+      let formContent = doc.interactions().map(interaction => {
+        if(interaction.name() == form.type)
+          return h(form.clazz, {document:doc, interaction:interaction});
+          else return null;
       });
 
       //update form
@@ -429,7 +429,7 @@ class FormEditor extends Component {
         h('h2', form.type),
         ...formContent,
         h('div.form-action-buttons', [
-          h('button.form-interaction-adder', { onClick: e => self.addInteractionRow({subtype:form.type, entityCnt:form.entityCnt})}, [
+          h('button.form-interaction-adder', { onClick: e => self.addInteractionRow({name:form.type, entityCnt:form.entityCnt})}, [
             h('i.material-icons.add-new-interaction-icon', 'add'),
             'ADD INTERACTION'
           ])])
