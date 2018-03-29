@@ -128,7 +128,7 @@ class ActionLogger extends DirtyComponent {
   }
 
   render() {
-    const history = this.state.history.map(entry => {
+    const history = this.state.history.slice(Math.max(this.state.history.length - 4, 1)).map(entry => {
       return h('div', entry);
     });
 
