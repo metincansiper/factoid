@@ -24,7 +24,6 @@ class ActionLogger extends DirtyComponent {
   }
 
   componentDidMount(){
-    const docEvents = ['remove', 'add', 'rename', 'toggleorganism'];
 
     const elementEvents = [
       'rename',
@@ -93,7 +92,7 @@ class ActionLogger extends DirtyComponent {
       }
     };
 
-    this.data.document.on('add', e => {
+    this.onAdd = e => {
       const elName = e.name() === '' ? 'unamed element' : e.name();
 
       pushHistory(`add event for ${elName}`);
@@ -101,15 +100,19 @@ class ActionLogger extends DirtyComponent {
       logElementEvts(e);
 
       this.dirty();
-    });
+    };
 
-    this.data.document.on('remove', e => {
+    this.onRemove = e => {
       const elName = e.name() === '' ? 'unamed entity' : e.name();
 
       pushHistory(`remove event for ${elName}`);
 
       this.dirty();
-    });
+    };
+
+    this.data.document.on('add', this.onAdd);
+
+    this.data.document.on('remove', this.onRemove);
 
     this.data.document.elements().forEach(logElementEvts);
     this.setState({
@@ -117,6 +120,11 @@ class ActionLogger extends DirtyComponent {
         return `ground ${ent.name() ? ent.name() : 'unnamed entity'}`;
       }))
     });
+  }
+
+  componentWillUnmount(){
+    this.data.document.removeListener(this.onAdd);
+    this.data.document.removeListener(this.onRemove);
   }
 
   render() {
