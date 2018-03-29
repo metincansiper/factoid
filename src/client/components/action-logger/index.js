@@ -1,8 +1,9 @@
-const React = require('react');
 const h = require('react-hyperscript');
 
+const DirtyComponent = require('../dirty-component');
 
-class ActionLogger extends React.Component {
+
+class ActionLogger extends DirtyComponent {
   constructor(props){
     super(props);
 
@@ -16,6 +17,10 @@ class ActionLogger extends React.Component {
       history: [],
       todos: []
     };
+  }
+
+  shouldComponentUpdate(next, prev) {
+    return true;
   }
 
   componentDidMount(){
@@ -52,6 +57,8 @@ class ActionLogger extends React.Component {
           const intnName = intn.name() === '' ? `unamed` : intn.name();
 
           pushHistory(`${evt} event for ${intnName} interaction`);
+
+          this.dirty();
         });
       });
     };
@@ -62,6 +69,8 @@ class ActionLogger extends React.Component {
           const entName = ent.name() === '' ? `unamed` : ent.name();
 
           pushHistory(`${evt} event for ${entName} entity`);
+
+          this.dirty();
         });
       });
     };
@@ -71,7 +80,9 @@ class ActionLogger extends React.Component {
         el.on(evt, (e) => {
           const elName = el.name() === '' ? `unamed ${el.type()}` : el.name();
 
-          pushHistory(`${evt} event for element ${elName}`);
+          pushHistory(`${evt} event for ${elName}`);
+
+          this.dirty();
         });
       });
 
@@ -82,19 +93,22 @@ class ActionLogger extends React.Component {
       }
     };
 
-    docEvents.forEach(evt => {
-      this.data.document.on(evt, e => {
-        const entityName = e.name() === '' ? 'unamed entity' : e.name();
+    this.data.document.on('add', e => {
+      const elName = e.name() === '' ? 'unamed element' : e.name();
 
-        pushHistory(`${evt} event for ${entityName}`);
+      pushHistory(`add event for ${elName}`);
 
-        if (evt === 'add') {
-          logElementEvts(e);
-          this.setState({
-            todos: this.state.todos.concat(['ground unnamed entity'])
-          });
-        }
-      });
+      logElementEvts(e);
+
+      this.dirty();
+    });
+
+    this.data.document.on('remove', e => {
+      const elName = e.name() === '' ? 'unamed entity' : e.name();
+
+      pushHistory(`remove event for ${elName}`);
+
+      this.dirty();
     });
 
     this.data.document.elements().forEach(logElementEvts);
@@ -110,8 +124,8 @@ class ActionLogger extends React.Component {
       return h('div', entry);
     });
 
-    const todos = this.state.todos.map(todo => {
-      return h('div', todo);
+    const todos = this.data.document.entities().filter(ent => !ent.associated()).map(ent => {
+      return h('div', `ground ${ent.name() ? ent.name() : 'unnamed entity'}`);
     });
 
     return h('div.action-logger', [
