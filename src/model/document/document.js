@@ -155,8 +155,8 @@ class Document {
     return this.elements().filter( el => el.isEntity() );
   }
 
-  interactions(type){
-    return this.elements().filter( el => (el.isInteraction() && (!type || el.isSubtype(type))) );
+  interactions(){
+    return this.elements().filter( el => (el.isInteraction() ) );
   }
 
 
