@@ -133,14 +133,20 @@ class ActionLogger extends DirtyComponent {
     });
 
     const todos = this.data.document.entities().filter(ent => !ent.associated()).map(ent => {
-      return h('div', `ground ${ent.name() ? ent.name() : 'unnamed entity'}`);
+      return h('li', `ground ${ent.name() ? ent.name() : 'unnamed entity'}`);
     });
 
     return h('div.action-logger', [
       h('div', 'ACTION HISTORY'),
       ...history,
-      h('div', 'TODOS'),
-      ...todos
+      h('div', 'TODO'),
+      h('ul', todos),
+      h('div', 'WHAT CAN YOU DO'),
+      h('ul', [
+        h('li', 'click + to create a new entity'),
+        h('li', 'click -> to create an interaction between two entities'),
+        h('li', 'WIP (click the submit button to finish editing your Factoid)'),
+      ])
     ]);
   }
 }
