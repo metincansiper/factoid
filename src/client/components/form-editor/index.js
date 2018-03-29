@@ -3,7 +3,7 @@ const h = require('react-hyperscript');
 const io = require('socket.io-client');
 const _ = require('lodash');
 
-
+const Tooltip = require('../popover/tooltip');
 const logger = require('../../logger');
 const debug = require('../../debug');
 
@@ -12,36 +12,49 @@ const Document = require('../../../model/document');
 const DocumentWizardStepper = require('../document-wizard-stepper');
 
 
+
+
+
 class EntityForm extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = this.data = {
       entity: props.entity,
-      placeholder: props.placeholder
+      placeholder: props.placeholder,
+      description: props.description
     };
   }
 
-  updateEntityName( newName ){
-    this.state.entity.name( newName );
+  updateEntityName(newName) {
+    this.state.entity.name(newName);
     this.forceUpdate();
   }
-  render(){
-    return h('div.form-interaction', [
-      h('input[type="text"].form-entity', {
-      value: this.state.entity.name(),
-      placeholder: this.state.placeholder,
-      onChange: e => this.updateEntityName(e.target.value)
-    })]);
+
+  render() {
+
+    return h(Tooltip, {description: this.state.description}, [
+      h('div.form-interaction', [
+        h('input[type="text"].form-entity', {
+          value: this.state.entity.name(),
+          placeholder: this.state.placeholder,
+          onChange: e => this.updateEntityName(e.target.value)
+        })
+      ])
+    ]);
   }
 }
 
 class MultipleEntityForm extends EntityForm {
   render(){
-    return h('div.form-interaction', [h('textarea.form-multiple-entity"', {
-      value: this.state.entity.name(),
-      placeholder: this.state.placeholder,
-      onChange: e => this.updateEntityName(e.target.value)
-    })]);
+    return h(Tooltip, {description: this.state.description}, [
+      h('div.form-interaction', [
+        h('textarea.form-multiple-entity"', {
+        value: this.state.entity.name(),
+        placeholder: this.state.placeholder,
+        onChange: e => this.updateEntityName(e.target.value)
+        })
+      ])
+    ]);
   }
 }
 
@@ -98,7 +111,7 @@ class ProteinModificationForm extends InteractionForm {
 
     //Treat two options(activation + modification) as one interaction type
     return h('div.form-interaction', [
-      h(EntityForm, { entity: lEnt ,  placeholder:'Enter controller protein'}),
+      h(EntityForm, { entity: lEnt ,  placeholder:'Enter controller protein', description:'Name or ID'}),
       h('span', [
         h('select.form-options', {id:('activation-'+ intn.id()), value: actVal,
           onChange: e => {
@@ -132,7 +145,7 @@ class ProteinModificationForm extends InteractionForm {
             h('option', { value: 'other' }, 'other')
       ])
         ]),
-      h(EntityForm, { entity: rEnt, placeholder:'Enter controlled protein' } ),
+      h(EntityForm, { entity: rEnt, placeholder:'Enter controlled protein' , description:'Name or ID'} ),
       h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
     ]);
   }
@@ -147,7 +160,7 @@ class ComplexInteractionForm extends InteractionForm {
     const lEnt = intn.elements()[0];
 
     return h('div.form-interaction', [
-      h(MultipleEntityForm, { entity: lEnt , placeholder: 'Enter molecule list'}),
+      h(MultipleEntityForm, { entity: lEnt , placeholder: 'Enter molecule list', description:'Name or ID'}),
       h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
     ]);
   }
@@ -166,7 +179,7 @@ class LocationChangeForm extends InteractionForm {
     const newLocEnt = intn.elements()[3];
 
     return h('div.form-interaction', [
-      h(EntityForm, { entity: lEnt , placeholder: 'Enter controller protein'}),
+      h(EntityForm, { entity: lEnt , placeholder: 'Enter controller protein', description:'Name or ID'}),
       h('span', [
           h('select.form-options', { value: intn.description(), onChange: e => this.updateInteractionType(e.target.value) }, [
               h('option', { value: 'activates' }, 'activates'),
@@ -174,7 +187,7 @@ class LocationChangeForm extends InteractionForm {
           ])
       ]),
       //TODO: will be separately added as ID and type
-      h(MultipleEntityForm, { entity: rEnt , placeholder: 'Enter molecule list'}),
+      h(MultipleEntityForm, { entity: rEnt , placeholder: 'Enter molecule list', description:'Gene symbol, Uniprot ID or Chebi ID'}),
       h(EntityForm, { entity: oldLocEnt, placeholder: 'Enter old location' } ),
       h(EntityForm, { entity: newLocEnt, placeholder: 'Enter new location' } ),
       h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
@@ -383,6 +396,7 @@ class FormEditor extends Component {
   //TODO: link this to biopax model
   submit(){
 
+    //Test validity
   }
 
 
