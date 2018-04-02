@@ -128,8 +128,8 @@ class ActionLogger extends DirtyComponent {
   }
 
   render() {
-    const history = this.state.history.slice(Math.max(this.state.history.length - 4, 1)).map(entry => {
-      return h('div', entry);
+    const history = this.state.history.slice(Math.max(this.state.history.length - 3, 1)).map(entry => {
+      return h('li', entry);
     });
 
     const todos = this.data.document.entities().filter(ent => !ent.associated()).map(ent => {
@@ -137,15 +137,21 @@ class ActionLogger extends DirtyComponent {
     });
 
     return h('div.action-logger', [
-      h('div', 'ACTION HISTORY'),
-      ...history,
-      h('div', 'TODO'),
-      h('ul', todos),
-      h('div', 'WHAT CAN YOU DO'),
-      h('ul', [
-        h('li', 'click + to create a new entity'),
-        h('li', 'click -> to create an interaction between two entities'),
-        h('li', 'WIP (click the submit button to finish editing your Factoid)'),
+      h('div.action-section', [
+        h('div.action-logger-title', 'ACTION HISTORY'),
+        h('ul', history)
+      ]),
+      h('div.action-section', [
+        h('div.action-logger-title', 'TODO'),
+        h('ul', todos)
+      ]),
+      h('div.action-section', [
+        h('div.action-logger-title', 'GUIDE'),
+        h('ul', [
+          h('li', 'click + to create a new entity'),
+          h('li', 'click -> to create an interaction between two entities'),
+          h('li', 'WIP (click the submit button to finish editing your Factoid)'),
+        ])
       ])
     ]);
   }
