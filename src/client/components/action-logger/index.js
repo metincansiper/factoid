@@ -10,7 +10,10 @@ class ActionLogger extends DirtyComponent {
 
     this.data = {
       bus: props.bus,
-      document: props.document
+      document: props.document,
+      intnEvents: [],
+      entEvents: [],
+      elEvents: []
     };
 
     this.state = {
@@ -52,37 +55,46 @@ class ActionLogger extends DirtyComponent {
 
     let logInteractionEvts = intn => {
       interactionEvents.forEach(evt => {
-        intn.on(evt, e => {
+
+        let intnEvent = () => {
           const intnName = intn.name() === '' ? `unamed` : intn.name();
 
           pushHistory(`${evt} event for ${intnName} interaction`);
 
           this.dirty();
-        });
+        };
+
+        intn.on(evt, intnEvent);
+        this.data.intnEvents.push(intnEvent);
       });
     };
 
     let logEntityEvts = ent => {
       entityEvents.forEach(evt => {
-        ent.on(evt, e => {
+        let entEvent = e => {
           const entName = ent.name() === '' ? `unamed` : ent.name();
 
           pushHistory(`${evt} event for ${entName} entity`);
 
           this.dirty();
-        });
+        };
+
+        ent.on(evt, entEvent);
+        this.data.entEvents.push(entEvent);
       });
     };
 
     let logElementEvts = el => {
       elementEvents.forEach(evt => {
-        el.on(evt, (e) => {
+        let elEvent = e => {
           const elName = el.name() === '' ? `unamed ${el.type()}` : el.name();
 
           pushHistory(`${evt} event for ${elName}`);
 
           this.dirty();
-        });
+        };
+        el.on(evt, elEvent);
+        this.data.elEvents.push(elEvent);
       });
 
       if (el.isInteraction()) {
@@ -125,6 +137,10 @@ class ActionLogger extends DirtyComponent {
   componentWillUnmount(){
     this.data.document.removeListener(this.onAdd);
     this.data.document.removeListener(this.onRemove);
+
+    this.data.intnEvents.forEach(evt => this.data.document.removeListener(evt));
+    this.data.entEvents.forEach(evt => this.data.document.removeListener(evt));
+    this.data.elEvents.forEach(evt => this.data.document.removeListener(evt));
   }
 
   render() {
