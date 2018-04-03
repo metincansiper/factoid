@@ -73,9 +73,11 @@ class InteractionForm extends Component {
 
     let promiseArr = [];
     for(let i = 0; i < elsLength; i++)
-      promiseArr.push(Promise.try( () => els[i].synch()).then(() => intn.removeParticipant(els[i])));
+      promiseArr.push(Promise.try( () => els[i].synch()).then(() => intn.removeParticipant(els[i])).then(doc.remove(els[i])));
 
     Promise.all(promiseArr).then( () => {
+
+
       doc.remove(intn);
       intn.deleted = true;
 
@@ -105,6 +107,7 @@ class ProteinModificationForm extends InteractionForm {
     let actVal = intn.description().split('\t')[0];
     let modVal = intn.description().split('\t')[1];
 
+    intn.description(actVal+ "-" + modVal);
 
     //Treat two options(activation + modification) as one interaction type
     return h('div.form-interaction', [
@@ -155,7 +158,7 @@ class ComplexInteractionForm extends InteractionForm {
       return null;
 
     const lEnt = intn.elements()[0];
-
+    intn.description(intn.name());
     return h('div.form-interaction', [
       h(MultipleEntityForm, { entity: lEnt , placeholder: 'Enter molecule list', description:'Name or ID'}),
       h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
@@ -175,6 +178,7 @@ class LocationChangeForm extends InteractionForm {
     const oldLocEnt = intn.elements()[2];
     const newLocEnt = intn.elements()[3];
 
+
     return h('div.form-interaction', [
       h(EntityForm, { entity: lEnt , placeholder: 'Enter controller protein', description:'Name or ID'}),
       h('span', [
@@ -183,6 +187,7 @@ class LocationChangeForm extends InteractionForm {
               h('option', { value: 'inhibits' }, 'inhibits'),
           ])
       ]),
+
       //TODO: will be separately added as ID and type
       h(MultipleEntityForm, { entity: rEnt , placeholder: 'Enter molecule list', description:'Gene symbol, Uniprot ID or Chebi ID'}),
       h(EntityForm, { entity: oldLocEnt, placeholder: 'Enter old location' } ),
@@ -202,6 +207,7 @@ class BiochemicalReactionForm extends InteractionForm{
     const catalyzer = intn.elements()[1];
     const outputSmallMolecules = intn.elements()[2];
 
+    intn.description("calatyzed by " + catalyzer);
     // return h('div', 'a');
     return h('div.form-interaction', [
       h(MultipleEntityForm, { entity: inputSmallMolecules , placeholder: 'Enter input small molecules'}),
@@ -221,6 +227,7 @@ class PhysicalInteractionForm extends InteractionForm{
     const lEnt = intn.elements()[0];
     const rEnt = intn.elements()[1];
 
+    intn.description("interacts with");
     return h('div.form-interaction', [
       h(MultipleEntityForm, { entity: lEnt , placeholder: 'Enter molecule list'}),
       h('h3.form-entity-title', 'interact(s) with'),
@@ -364,7 +371,7 @@ class FormEditor extends Component {
     return this.addElement( _.assign({
         type: 'interaction',
         name: data.name,
-        description: data.name
+        description: ''
     }, data) );
   }
 
@@ -390,8 +397,19 @@ class FormEditor extends Component {
     });
 
   }
-  //TODO: This will test validity of entries and open the editor if valid i,e, all the fields are filled etc.
+  //TODO: This will test validity of entries first
+  //Convert to biopax or show in the editor
   submit(){
+
+    let doc = this.state.document;
+    doc.interactions().map(interaction=>{
+      console.log(interaction.name());
+      console.log(interaction.description());
+      interaction.elements().map(el => {
+        console.log(el.name());
+      });
+
+    });
 
     //Test validity
   }
@@ -402,14 +420,14 @@ class FormEditor extends Component {
     let self = this;
 
     const forms = [
-      {type: 'PROTEIN_MODIFICATION' , clazz: ProteinModificationForm, entityCnt: 2},
-      {type:'COMPLEX_ASSOCIATION', clazz: ComplexInteractionForm, entityCnt: 1},
-      {type:'COMPLEX_DISSOCIATION', clazz: ComplexInteractionForm, entityCnt: 1},
-      {type:'LOCATION_CHANGE', clazz: LocationChangeForm, entityCnt: 4},
-      {type:'BIOCHEMICAL_REACTION', clazz: BiochemicalReactionForm, entityCnt: 3},
-      {type:'PHYSICAL_INTERACTION', clazz: PhysicalInteractionForm, entityCnt: 2},
-      {type:'ACTIVATION_INHIBITION', clazz:ActivationInhibitionForm, entityCnt: 2},
-      {type:'EXPRESSION_REGULATION', clazz: ExpressionRegulationForm, entityCnt: 2}
+      {type: 'Protein Modification' , clazz: ProteinModificationForm, entityCnt: 2},
+      {type:'Complex Association', clazz: ComplexInteractionForm, entityCnt: 1},
+      {type:'Complex Dissociation', clazz: ComplexInteractionForm, entityCnt: 1},
+      {type:'Location Change', clazz: LocationChangeForm, entityCnt: 4},
+      {type:'Biochemical Reaction', clazz: BiochemicalReactionForm, entityCnt: 3},
+      {type:'Physical Interaction', clazz: PhysicalInteractionForm, entityCnt: 2},
+      {type:'Activation Inhibition', clazz:ActivationInhibitionForm, entityCnt: 2},
+      {type:'Expression Regulation', clazz: ExpressionRegulationForm, entityCnt: 2}
     ];
 
     let hArr = [];
