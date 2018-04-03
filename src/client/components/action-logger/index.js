@@ -18,7 +18,8 @@ class ActionLogger extends DirtyComponent {
 
     this.state = {
       history: [],
-      todos: []
+      todos: [],
+      open: true
     };
   }
 
@@ -152,24 +153,37 @@ class ActionLogger extends DirtyComponent {
       return h('li', `ground ${ent.name() ? ent.name() : 'unnamed entity'}`);
     });
 
-    return h('div.action-logger', [
-      h('div.action-section', [
-        h('div.action-logger-title', 'ACTION HISTORY'),
-        h('ul', history)
-      ]),
-      h('div.action-section', [
-        h('div.action-logger-title', 'TODO'),
-        h('ul', todos)
-      ]),
-      h('div.action-section', [
-        h('div.action-logger-title', 'GUIDE'),
-        h('ul', [
-          h('li', 'click + to create a new entity'),
-          h('li', 'click -> to create an interaction between two entities'),
-          h('li', 'WIP (click the submit button to finish editing your Factoid)'),
+    let content;
+    if (this.state.open) {
+      content = h('div.action-logger', [
+        h('div.close-menu', { onClick: () => this.setState({open: !this.state.open}) }, '--'),
+        h('div.action-section', [
+          h('div.action-logger-title', 'ACTION HISTORY'),
+          h('ul', history)
+        ]),
+        h('div.action-section', [
+          h('div.action-logger-title', 'TODO'),
+          h('ul', todos)
+        ]),
+        h('div.action-section', [
+          h('div.action-logger-title', 'GUIDE'),
+          h('ul', [
+            h('li', 'click + to create a new entity'),
+            h('li', 'click -> to create an interaction between two entities'),
+            h('li', 'WIP (click the submit button to finish editing your Factoid)'),
+          ])
         ])
-      ])
-    ]);
+      ]);
+    } else {
+      content = h('div.action-logger-minimized', [
+        h('div.minimized-timeline', [
+          h('div', 'GUIDE'),
+          h('div', { onClick: () => this.setState({open: !this.state.open }) },  '+')
+        ])
+      ]);
+    }
+
+    return content;
   }
 }
 
