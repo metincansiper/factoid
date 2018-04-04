@@ -21,7 +21,7 @@ let defaults = {
   DB_CERT: undefined,  // path to a certificate (cert) file if db uses ssl
 
   // Services
-  REACH_URL: 'http://localhost:8080/api/text',
+  REACH_URL: 'http://reach.baderlab.org/api/uploadFile',
   UNIPROT_URL: 'http://www.uniprot.org/uniprot',
   UNIPROT_LINK_BASE_URL: 'http://www.uniprot.org/uniprot/',
   UNIPROT_CACHE_SIZE: DEFAULT_CACHE_SIZE,
@@ -37,6 +37,14 @@ let defaults = {
 };
 
 let envVars = _.pick( process.env, Object.keys( defaults ) );
+
+for( let key in envVars ){
+  let val = envVars[key];
+
+  if( val === '' || val == null ){
+    delete envVars[key];
+  }
+}
 
 let conf = Object.assign( {}, defaults, envVars );
 

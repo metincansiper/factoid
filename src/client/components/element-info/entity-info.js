@@ -268,7 +268,6 @@ class EntityInfo extends React.Component {
     let p = this.props;
     let el = s.element;
     let doc = p.document;
-    let qOrgs = doc.organisms().map( org => org.id() ).join(',');
 
     let isNewName = name !== s.oldName;
     let clearOldMatches = isNewName || changedOrganisms;
@@ -288,7 +287,7 @@ class EntityInfo extends React.Component {
       name: name,
       limit: s.limit,
       offset: offset,
-      organism: qOrgs
+      organismCounts: doc.organismCountsJson()
     };
 
     if( s.updatePromise ){
@@ -299,7 +298,13 @@ class EntityInfo extends React.Component {
 
     if( name ){
       update = (
-        Promise.try( () => fetch( '/api/element-association/search?' + queryString.stringify(q) ) )
+        Promise.try( () => fetch( '/api/element-association/search', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify(q)
+        } ) )
         .then( res => res.json() )
         .then( matches => {
           if( this._unmounted ){ return; }
@@ -353,10 +358,10 @@ class EntityInfo extends React.Component {
           }, () => {
             if( clearOldMatches ){
               let root = ReactDom.findDOMNode(this);
-              let matches = root != null ? root.querySelector('.entity-info-matches') : null;
+              let matchesDom = root != null ? root.querySelector('.entity-info-matches') : null;
 
-              if( matches != null ){
-                matches.scrollTop = 0;
+              if( matchesDom != null ){
+                matchesDom.scrollTop = 0;
               }
             }
           });
@@ -473,9 +478,9 @@ class EntityInfo extends React.Component {
       switch( stage ){
         case STAGES.NAME:
           if( this.data.name ){
-            this.data.nameNotification.message(`This entity is incomplete.  Amend the name of "${this.data.name}", if necessary, and then go to the next step.`);
+            this.data.nameNotification.message(`Amend the name of "${this.data.name}", if necessary.`);
           } else {
-            this.data.nameNotification.message(`This entity is incomplete.  Name the entity, then go to the next step.`);
+            this.data.nameNotification.message(`Name the entity.`);
           }
 
 
@@ -483,11 +488,11 @@ class EntityInfo extends React.Component {
           break;
 
         case STAGES.ASSOCIATE:
-          this.data.assocNotification.message(`Link "${this.data.name}" to one of the following identifiers.  Linking increases the impact of your paper by enabling data sharing and computational analysis.`);
+          this.data.assocNotification.message(`Select the best match for "${this.data.name}".`);
           break;
 
         case STAGES.MODIFY:
-          this.data.modNotification.message(`Specifying a modification can help to more accurately represent the state of ${this.data.name}.`);
+          this.data.modNotification.message(`Select a modification for ${this.data.name}.`);
           break;
 
         case STAGES.COMPLETED:
@@ -753,13 +758,6 @@ class EntityInfo extends React.Component {
           ])
         ])
       );
-
-      children.push( h('div.entity-info-organism-toggles', Organism.ALL.map( organism => {
-        let onToggle = () => doc.toggleOrganism( organism );
-        let getState = () => doc.organisms().find( o => o.id() === organism.id() ) != null;
-
-        return h(OrganismToggle, { organism, onToggle, getState });
-      } )) );
     } else if( stage === STAGES.ASSOCIATE ){
       let AssocMsg = () => {
         let notification = s.assocNotification;
@@ -814,8 +812,18 @@ class EntityInfo extends React.Component {
       let modChildren = [];
 
       let onChange = (evt) => {
-        this.modify( evt.target.value );
+        let value = evt.target.value;
+
+        this.modify( value );
         this.forward();
+      };
+
+      let onClick = (evt) => {
+        let value = evt.target.value;
+
+        if( s.element.completed() && value === s.modification.value ){
+          this.forward();
+        }
       };
 
       s.element.ORDERED_MODIFICATIONS.forEach( mod => {
@@ -826,7 +834,7 @@ class EntityInfo extends React.Component {
         let checked = value === s.modification.value && s.element.completed();
 
         modChildren.push(
-          h('input', { type, name, id, value, onChange, checked }),
+          h('input', { type, name, id, value, onChange, onClick, checked }),
           h('label', { htmlFor: id }, mod.displayValue)
         );
       } );
