@@ -56,6 +56,13 @@ let runLayout = doc => {
   return Promise.try( run ).then( getDoc );
 };
 
+http.get('/my-factoids', (req, res) => {
+  res.json([
+    'factoid1',
+    'factoid2'
+  ]);
+});
+
 // get existing doc
 http.get('/:id', function( req, res ){
   let id = req.params.id;
