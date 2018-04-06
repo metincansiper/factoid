@@ -57,10 +57,12 @@ let runLayout = doc => {
 };
 
 http.get('/my-factoids', (req, res) => {
-  res.json([
-    'factoid1',
-    'factoid2'
-  ]);
+  (
+    Promise.try( () => loadTable( 'document' ) )
+      .then( db => db.rethink.table('document').pluck(['id', 'secret']).run(db.conn) )
+      .then( r => r.toArray() )
+      .then( results => res.json(results) )
+  );
 });
 
 // get existing doc
