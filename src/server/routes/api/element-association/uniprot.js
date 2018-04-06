@@ -43,6 +43,7 @@ const searchQuery = opts => {
         strParam('accession', opts.name),
         strParam('accession', opts.id)
       ].filter( p => !_.isNil(p) ).join('+OR+') + ')',
+      strParam('reviewed', 'yes'),
       (() => {
         let orgs = opts.organism;
         let ids;
@@ -182,6 +183,9 @@ const processXml = res => {
     pushIfNonNil( proteinNames, recFullProteinName );
     altProteinNames.forEach( name => pushIfNonNil( proteinNames, name ) );
     subProteinNames.forEach( name => pushIfNonNil( proteinNames, name ) );
+
+    // since uniprot uses weird names, use the first "protein name" instead, if possible
+    name = proteinNames[0] || name;
 
     ents.push({ namespace, type, id, organism, name, geneNames, proteinNames });
   }

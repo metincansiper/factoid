@@ -1,0 +1,132 @@
+.form-editor-title {
+  text-align: center;
+  color: #212F3D;
+  font-size: 2.5em;
+  margin-bottom: 1em;
+}
+
+.form-interaction {
+  padding-bottom: 10px;
+  display: flex;
+  /*justify-content: space-between;*/
+}
+
+.form-action-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.form-interaction-adder {
+  color: #00ADB5;
+  background-color: #EEEEEE;
+  height: 2.5em;
+  margin-top: 1.5em;
+  margin-bottom: 4em;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.form-entity-adder {
+  color: #00ADB5;
+  background-color: #EEEEEE;
+  height: 2em;
+  width: 2em;
+  margin: 0.5em;
+  padding-left: 0.5em;
+  display: flex;
+  flex-direction: row;
+}
+
+
+.delete-interaction {
+  border: none;
+  color: #ED4A31;
+}
+
+
+.form-submit {
+  color: #EEEEEE;
+  background-color: #00A84C;
+  height: 2.5em;
+  margin-top: 1.5em;
+  margin-bottom: 4em;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: row;
+
+}
+
+.add-new-interaction-icon {
+  font-size: 1.5em;
+}
+
+.add-new-entity-icon {
+  font-size: 1em;
+}
+.form-entity-title {
+  margin: 0.5em;
+}
+
+.form-entity {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  width: 11em;
+  height: 1.5em;
+  margin: 0.5em;
+
+}
+
+.form-entity-small {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  width: 4em;
+  height: 1.5em;
+  margin: 0.5em;
+
+}
+
+.form-entity-medium {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  width: 8em;
+  height: 1.5em;
+  margin: 0.5em;
+
+}
+.form-multiple-entity {
+  padding: 0.5em;
+  height: 5em;
+  width: 12em;
+  line-height: 100%;
+  margin: 0.5em;
+}
+
+
+
+.form-options{
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  height: 1.5em;
+  margin: 0.5em;
+}
+
+.form-options-long{
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  height: 1.5em;
+  width: 230px;
+  margin: 0.5em;
+  /*font-size: 0.8em;*/
+
+}
+
+
+.form-entity::placeholder, .form-entity-small::placeholder, .form-entity-medium::placeholder{
+  font-style: italic;
+  font-weight: lighter;
+  font-family: Arial;
+  /*font-size: 0.9em;*/
+}
+

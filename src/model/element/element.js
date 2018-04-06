@@ -62,7 +62,6 @@ class Element {
       }
     });
   }
-
   filled(){
     return this.syncher.filled;
   }

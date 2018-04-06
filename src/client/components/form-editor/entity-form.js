@@ -1,0 +1,76 @@
+const { Component } = require('react');
+const _ = require('lodash');
+const h = require('react-hyperscript');
+const Popover = require('../popover/popover');
+const ElementInfo = require('../element-info/element-info');
+
+class EntityForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = this.data = _.assign( {
+      style: 'form-entity',
+      showEntityInfo: false
+
+    }, props );
+
+  }
+
+  updateEntityName(newName) {
+    this.state.entity.name(newName);
+    this.forceUpdate();
+  }
+
+  getDerivedStateFromProps(showEntityInfo){
+    this.state.showEntityInfo = showEntityInfo;
+
+    if(showEntityInfo){
+
+    }
+  }
+
+  updateGrounding(stateVal){
+
+    if(this.state.entity.name().length > 0)
+      this.state.showEntityInfo = stateVal;
+    this.setState(this.state);
+
+    console.log("clicked");
+  }
+
+  render() {
+
+
+    let hFunc;
+    let hCompletedStatus;
+
+    if(this.state.entity.completed())
+      hCompletedStatus = h('i.material-icons.entity-info-complete-icon', 'check_circle');
+    else
+      hCompletedStatus = h('i.material-icons', 'help');
+
+    hFunc = h('div.form-interaction', [
+        h('input[type="text"].' + this.state.style, {
+          value: this.state.entity.name(),
+          placeholder: this.state.placeholder,
+          onChange: e => this.updateEntityName(e.target.value),
+          onClick: e => this.updateGrounding(true)
+        }),
+        hCompletedStatus
+      ]);
+
+    if(this.state.showEntityInfo){
+      hFunc = h(Popover, {
+        tippy: {
+          html: h(ElementInfo, { element: this.state.entity, document: this.state.document})}}, [hFunc]);
+
+      // if(this.state.entity.completed())
+      //   this.state.showEntityInfo = false;
+
+    }
+
+    return hFunc;
+  }
+}
+
+module.exports = EntityForm;
+
