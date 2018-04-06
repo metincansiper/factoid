@@ -9,7 +9,7 @@ class EntityForm extends Component {
     super(props);
     this.state = this.data = _.assign( {
       style: 'form-entity',
-      forceGrounding: false
+      showEntityInfo: false
 
     }, props );
 
@@ -17,38 +17,55 @@ class EntityForm extends Component {
 
   updateEntityName(newName) {
     this.state.entity.name(newName);
-
     this.forceUpdate();
   }
 
-  updateGrounding(){
-    console.log(this.state.entity.name()!= null);
-    console.log(this.state.entity.name().length);
+  getDerivedStateFromProps(showEntityInfo){
+    this.state.showEntityInfo = showEntityInfo;
+
+    if(showEntityInfo){
+
+    }
+  }
+
+  updateGrounding(stateVal){
 
     if(this.state.entity.name().length > 0)
-      this.state.forceGrounding = true;
-
+      this.state.showEntityInfo = stateVal;
     this.setState(this.state);
+
+    console.log("clicked");
   }
+
   render() {
 
-    // return// h(Tooltip, {description: h(ElementInfo, { element: this.state.entity, document: this.state.document})},[//this.state.tooltipContent},[
-      // h(ElementInfo, { element: this.state.entity, document: this.state.document}),
 
-    let hFunc = h('div.form-interaction', [
-      h('input[type="text"].' + this.state.style, {
-        value: this.state.entity.name(),
-        placeholder: this.state.placeholder,
-        onChange: e => this.updateEntityName(e.target.value),
-        onClick: e => this.updateGrounding()
-      })
-    ]);
-    if(this.state.forceGrounding){
+    let hFunc;
+    let hCompletedStatus;
+
+    if(this.state.entity.completed())
+      hCompletedStatus = h('i.material-icons.entity-info-complete-icon', 'check_circle');
+    else
+      hCompletedStatus = h('i.material-icons', 'help');
+
+    hFunc = h('div.form-interaction', [
+        h('input[type="text"].' + this.state.style, {
+          value: this.state.entity.name(),
+          placeholder: this.state.placeholder,
+          onChange: e => this.updateEntityName(e.target.value),
+          onClick: e => this.updateGrounding(true)
+        }),
+        hCompletedStatus
+      ]);
+
+    if(this.state.showEntityInfo){
       hFunc = h(Popover, {
         tippy: {
           html: h(ElementInfo, { element: this.state.entity, document: this.state.document})}}, [hFunc]);
 
-      this.state.forceGrounding = false;
+      // if(this.state.entity.completed())
+      //   this.state.showEntityInfo = false;
+
     }
 
     return hFunc;

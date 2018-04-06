@@ -9,7 +9,7 @@ const debug = require('../../debug');
 const Document = require('../../../model/document');
 
 const DocumentWizardStepper = require('../document-wizard-stepper');
-const EventEmitter = require('eventemitter3');
+
 
 const ProteinModificationForm = require('./protein-modification-form');
 const ComplexInteractionForm = require('./complex-interaction-form');
@@ -34,9 +34,6 @@ class FormEditor extends Component {
 
     let id = _.get( props, 'id' );
     let secret = _.get( props, 'secret' );
-
-
-
 
 
     let doc = new Document({
@@ -155,7 +152,6 @@ class FormEditor extends Component {
     let doc = this.state.document;
     let self = this;
 
-    //TODO: keep in a different file
     const forms = [
       {type: 'Protein Modification' , clazz: ProteinModificationForm,entityDescriptions:['input', 'output'], description:"One protein chemically modifies another protein.", defaultDescription: "activates-phosphorylation"},
       {type:'Complex Association', clazz: ComplexInteractionForm, entityDescriptions: ['input'], description: "Multiple proteins come together to form a complex molecule.", defaultDescription: "form a complex"},
