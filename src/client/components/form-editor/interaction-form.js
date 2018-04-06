@@ -1,6 +1,7 @@
 const { Component } = require('react');
 const _ = require('lodash');
 
+
 class InteractionForm extends Component {
   constructor(props){
     super(props);

@@ -19,7 +19,7 @@ class ActivationInhibitionForm extends InteractionForm{
       intn.setParticipantType(rEnt, 'negative');
 
     return h('div.form-interaction', [
-      h(EntityForm, { entity: lEnt , placeholder: 'Source protein'}),
+      h(EntityForm, { entity: lEnt , placeholder: 'Source protein', document: this.state.document}),
       h('span', [
         h('select.form-options', { value: intn.description(), onChange: e => {this.updateInteractionType(e.target.value);
         } }, [
@@ -27,7 +27,7 @@ class ActivationInhibitionForm extends InteractionForm{
           h('option', { value: 'inhibits' }, 'inhibits'),
         ])
       ]),
-      h(EntityForm, { entity: rEnt, placeholder: 'Target protein' } ),
+      h(EntityForm, { entity: rEnt, placeholder: 'Target protein' , document: this.state.document} ),
       h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
     ]);
 

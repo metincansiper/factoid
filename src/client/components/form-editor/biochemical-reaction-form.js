@@ -12,7 +12,7 @@ class BiochemicalReactionForm extends InteractionForm{
 
     let hFuncInput = intn.elements().map(el =>{
       if(el.description() === 'input')
-        return h('div', [h(EntityForm, {entity:el, placeholder:'Input small molecules', tooltipContent:'Name or ID', style: 'form-entity-small'})
+        return h('div', [h(EntityForm, {entity:el, placeholder:'Input small molecules', tooltipContent:'Name or ID', style: 'form-entity-small', document: this.state.document})
       ]);
       else
         return null;
@@ -20,7 +20,7 @@ class BiochemicalReactionForm extends InteractionForm{
 
     let hFuncOutput = intn.elements().map(el =>{
       if(el.description() === 'output')
-        return h('div', [h(EntityForm, {entity:el, placeholder:'Output small molecules', tooltipContent:'Name or ID', style: 'form-entity-small'})
+        return h('div', [h(EntityForm, {entity:el, placeholder:'Output small molecules', tooltipContent:'Name or ID', style: 'form-entity-small', document: this.state.document})
       ]);
     else
       return null;
@@ -28,7 +28,7 @@ class BiochemicalReactionForm extends InteractionForm{
 
     let hFuncCatalyzer = intn.elements().map(el =>{
       if(el.description() === 'catalyzer')
-        return h('div', [h(EntityForm, {entity:el, placeholder:'Catalyzer', tooltipContent:'Name or ID'})
+        return h('div', [h(EntityForm, {entity:el, placeholder:'Catalyzer', tooltipContent:'Name or ID', document: this.state.document})
         ]);
       else
         return null;

@@ -2,6 +2,8 @@ const h = require('react-hyperscript');
 let InteractionForm = require('./interaction-form.js');
 let EntityForm = require('./entity-form.js');
 
+
+
 class ProteinModificationForm extends InteractionForm {
   render(){
 
@@ -27,7 +29,7 @@ class ProteinModificationForm extends InteractionForm {
 
     //Treat two options(activation + modification) as one interaction type
     return h('div.form-interaction', [
-      h(EntityForm, { entity: lEnt ,  placeholder:'Controller protein', tooltipContent:'Name or ID'}),
+      h(EntityForm, { entity: lEnt ,  placeholder:'Controller protein', tooltipContent:'Name or ID', document: this.state.document}),
       h('span', [
         h('select.form-options', {id:('activation-'+ intn.id()), value: actVal,
           onChange: e => {
@@ -61,7 +63,7 @@ class ProteinModificationForm extends InteractionForm {
           h('option', { value: 'other' }, 'other')
         ])
       ]),
-      h(EntityForm, { entity: rEnt, placeholder:'Controlled protein' , tooltipContent:'Name or ID'} ),
+      h(EntityForm, { entity: rEnt, placeholder:'Controlled protein' , tooltipContent:'Name or ID', document: this.state.document} ),
       h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
     ]);
   }

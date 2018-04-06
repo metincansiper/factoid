@@ -36,7 +36,11 @@ module.exports = function({ bus, cy, document }){
     hideAllTippies();
     deactivateIncompleteNotification();
 
+    alert(el);
+
+    console.log("in tippy");
     if( el != null ){
+
       toggleElementInfoFor( cy.getElementById( el.id() ) );
     }
   });

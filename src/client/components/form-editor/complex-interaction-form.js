@@ -12,7 +12,7 @@ class ComplexInteractionForm extends InteractionForm {
       return null;
 
     let hFunc = intn.elements().map(el =>{
-      return h('div', [h(EntityForm, {entity:el, placeholder:'Protein', tooltipContent:'Name or ID', style: 'form-entity-small'})
+      return h('div', [h(EntityForm, {entity:el, placeholder:'Protein', tooltipContent:'Name or ID', style: 'form-entity-small', document: this.state.document})
       ]);
     });
 

@@ -23,7 +23,7 @@ class LocationChangeForm extends InteractionForm {
 
 
     return h('div.form-interaction', [
-      h(EntityForm, { entity: lEnt , placeholder: 'Controller protein', tooltipContent:'Name or ID', style: 'form-entity-medium'}),
+      h(EntityForm, { entity: lEnt , placeholder: 'Controller protein', tooltipContent:'Name or ID', style: 'form-entity-medium', document: this.state.document}),
       h('span', [
           h('select.form-options-long', { value: intn.description(), onChange: e => this.updateInteractionType(e.target.value) }, [
               h('option', { value: 'activates location change' }, 'activates location change'),
@@ -31,11 +31,11 @@ class LocationChangeForm extends InteractionForm {
           ])
       ]),
 
-      h(EntityForm, { entity: rEnt , placeholder: 'Molecule', tooltipContent:'Gene symbol, Uniprot ID or Chebi ID', style: 'form-entity-medium'}),
+      h(EntityForm, { entity: rEnt , placeholder: 'Molecule', tooltipContent:'Gene symbol, Uniprot ID or Chebi ID', style: 'form-entity-medium', document: this.state.document}),
       h('h3.form-entity-title', 'from'),
-      h(EntityForm, { entity: oldLocEnt, placeholder: 'Old location', style: 'form-entity-medium'}),
+      h(EntityForm, { entity: oldLocEnt, placeholder: 'Old location', style: 'form-entity-medium', document: this.state.document}),
       h('h3.form-entity-title', 'to'),
-      h(EntityForm, { entity: newLocEnt, placeholder: 'New location' , style: 'form-entity-medium'}),
+      h(EntityForm, { entity: newLocEnt, placeholder: 'New location' , style: 'form-entity-medium', document: this.state.document}),
       h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
     ]);
   }

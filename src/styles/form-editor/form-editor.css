@@ -28,6 +28,18 @@
   flex-direction: row;
 }
 
+.form-entity-adder {
+  color: #00ADB5;
+  background-color: #EEEEEE;
+  height: 2em;
+  width: 2em;
+  margin: 0.5em;
+  padding-left: 0.5em;
+  display: flex;
+  flex-direction: row;
+}
+
+
 .delete-interaction {
   border: none;
   color: #ED4A31;
@@ -50,6 +62,9 @@
   font-size: 1.5em;
 }
 
+.add-new-entity-icon {
+  font-size: 1em;
+}
 .form-entity-title {
   margin: 0.5em;
 }
@@ -60,8 +75,26 @@
   width: 11em;
   height: 1.5em;
   margin: 0.5em;
+
 }
 
+.form-entity-small {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  width: 4em;
+  height: 1.5em;
+  margin: 0.5em;
+
+}
+
+.form-entity-medium {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  width: 8em;
+  height: 1.5em;
+  margin: 0.5em;
+
+}
 .form-multiple-entity {
   padding: 0.5em;
   height: 5em;
@@ -71,6 +104,7 @@
 }
 
 
+
 .form-options{
   padding-left: 0.5em;
   padding-right: 0.5em;
@@ -78,14 +112,21 @@
   margin: 0.5em;
 }
 
-.form-entity::placeholder{
-  font-style: italic;
-  font-weight: lighter;
-  font-family: Arial;
+.form-options-long{
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  height: 1.5em;
+  width: 230px;
+  margin: 0.5em;
+  /*font-size: 0.8em;*/
+
 }
 
-.form-multiple-entity::placeholder{
+
+.form-entity::placeholder, .form-entity-small::placeholder, .form-entity-medium::placeholder{
   font-style: italic;
   font-weight: lighter;
   font-family: Arial;
+  /*font-size: 0.9em;*/
 }
+
