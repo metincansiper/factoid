@@ -7,8 +7,6 @@ class BiochemicalReactionForm extends InteractionForm{
 
   render(){
     const intn = this.state.interaction;
-    if(intn.deleted)
-      return null;
 
     let hFuncInput = intn.elements().map(el =>{
       if(el.description() === 'input')

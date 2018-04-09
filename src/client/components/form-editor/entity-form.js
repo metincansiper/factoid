@@ -30,7 +30,11 @@ class EntityForm extends Component {
 
   }
 
-
+  // boundclick(){
+  //   $('#tippy-'+ this.state.entity.id()).bind('click', function(){
+  //     console.log("clicked");
+  //   });
+// }
 
   render() {
 

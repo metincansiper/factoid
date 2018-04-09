@@ -10,8 +10,6 @@ class ProteinModificationForm extends InteractionForm {
 
     let intn = this.state.interaction;
 
-    if(intn.deleted)
-      return null;
 
     let lEnt = intn.elements()[0];
     let rEnt = intn.elements()[1];

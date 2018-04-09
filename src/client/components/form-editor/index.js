@@ -46,6 +46,8 @@ class FormEditor extends Component {
       document: doc
     };
 
+
+
     Promise.try( () => doc.load() )
       .then( () => logger.info('The doc already exists and is now loaded') )
       .catch( err => {
@@ -67,8 +69,6 @@ class FormEditor extends Component {
         }
 
         // force an update here
-
-
         this.forceUpdate();
         logger.info('The editor is initialising');
       } );
@@ -174,12 +174,20 @@ class FormEditor extends Component {
     forms.forEach(function(form){
 
 
-      let formContent = doc.interactions().map(interaction => {
-        if(interaction.name() == form.type)
-          return h(form.clazz, {document:doc, interaction:interaction, description: form.type});
-          else return null;
-      });
+      // let formContent = doc.interactions().map(interaction => {
+      //
+      //   if(interaction.name() == form.type)
+      //     return h(form.clazz, {document:doc, interaction:interaction, description: form.type});
+      //     else return null;
+      // });
 
+
+      console.log("rerendered????");
+      let formContent = [];
+      for(let  i = 0; i < doc.interactions().length; i++){
+        if(doc.interactions()[i].name() == form.type)
+            formContent[i] =  h(form.clazz, {caller: self, document:doc, interaction:doc.interactions()[i], description: form.type});
+      }
       //update form
       let hFunc = h('div', [
         h('h2', form.type),
