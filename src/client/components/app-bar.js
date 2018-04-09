@@ -11,22 +11,25 @@ class AppBar extends Component {
     const p = this.props;
     const id = p.document.id();
     const secret = p.document.secret();
-    const controller = p.controller;
+    const bus = p.bus;
 
     return h('div.app-bar', [
-      h(Link, { to: '/new/seed'}, [
-        h('button.new-factoid', '+'),
-      ]),
-      h(Link, { to: `/document/${id}/${secret}` }, [
-        h('button.context-siwtch', 'Graph Editor')
-      ]),
-      h(Link, { to: `/form/${id}/${secret}` }, [
-        h('button.context-switch', 'Form Editor')
-      ]),
-      h(Link, { to: `/my-factoids` }, [
-        h('button.my-factoids', 'My Factoids')
-      ]),
-      h('button.timeline-toggle', { onClick: e => controller.toggleTimeline() }, 'Toggle Timeline')
+      h('h2.app-bar-title', 'Factoid'),
+      h('div.app-bar-buttons', [
+        h(Link, { to: '/new/seed'}, [
+          h('button.new-factoid', '+ New Factoid'),
+        ]),
+        h(Link, { to: `/document/${id}/${secret}` }, [
+          h('button.context-siwtch', 'Graph Editor')
+        ]),
+        h(Link, { to: `/form/${id}/${secret}` }, [
+          h('button.context-switch', 'Form Editor')
+        ]),
+        h(Link, { to: `/my-factoids` }, [
+          h('button.my-factoids', 'My Factoids')
+        ]),
+        h('button.timeline-toggle', { onClick: e => bus.emit('toggletimeline') }, 'Toggle Guide')
+      ])
     ]);
   }
 }

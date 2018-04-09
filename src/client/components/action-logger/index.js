@@ -28,6 +28,11 @@ class ActionLogger extends DirtyComponent {
   }
 
   componentDidMount(){
+    this.onToggleTimeline = () => {
+      this.setState({open: !this.state.open});
+    };
+
+    this.data.bus.on('toggletimeline', this.onToggleTimeline);
 
     const elementEvents = [
       'rename',
@@ -136,6 +141,7 @@ class ActionLogger extends DirtyComponent {
   }
 
   componentWillUnmount(){
+    this.data.bus.removeListener(this.onToggleTimeline);
     this.data.document.removeListener(this.onAdd);
     this.data.document.removeListener(this.onRemove);
 

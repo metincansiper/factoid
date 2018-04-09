@@ -3,9 +3,9 @@
   z-index: 1;
   opacity: 0.8;
   bottom: 0;
-  left: 0;
-  width: 500px;
-  height: 450px;
+  right: 0;
+  width: 30em;
+  height: 55em;
   background-color: #EEEEEE;
   color: #212F3D;
   padding: 10px;
@@ -18,7 +18,7 @@
   z-index: 1;
   opacity: 0.8;
   bottom: 0;
-  left: 0;
+  right: 0;
   width: 500px;
   height: 25px;
   background-color: #EEEEEE;
