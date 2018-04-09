@@ -4,6 +4,7 @@ const h = require('react-hyperscript');
 const Popover = require('../popover/popover');
 const ElementInfo = require('../element-info/element-info');
 
+
 class EntityForm extends Component {
   constructor(props) {
     super(props);
@@ -17,15 +18,8 @@ class EntityForm extends Component {
 
   updateEntityName(newName) {
     this.state.entity.name(newName);
-    this.forceUpdate();
-  }
+    this.setState(this.state);
 
-  getDerivedStateFromProps(showEntityInfo){
-    this.state.showEntityInfo = showEntityInfo;
-
-    if(showEntityInfo){
-
-    }
   }
 
   updateGrounding(stateVal){
@@ -34,8 +28,9 @@ class EntityForm extends Component {
       this.state.showEntityInfo = stateVal;
     this.setState(this.state);
 
-    console.log("clicked");
   }
+
+
 
   render() {
 
@@ -59,12 +54,13 @@ class EntityForm extends Component {
       ]);
 
     if(this.state.showEntityInfo){
+
+
       hFunc = h(Popover, {
         tippy: {
+          // trigger: 'mouseenter focus',
+          // trigger: 'click',
           html: h(ElementInfo, { element: this.state.entity, document: this.state.document})}}, [hFunc]);
-
-      // if(this.state.entity.completed())
-      //   this.state.showEntityInfo = false;
 
     }
 

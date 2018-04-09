@@ -7,6 +7,7 @@ let EntityForm = require('./entity-form.js');
 class ProteinModificationForm extends InteractionForm {
   render(){
 
+
     let intn = this.state.interaction;
 
     if(intn.deleted)

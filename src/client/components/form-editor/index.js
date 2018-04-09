@@ -68,6 +68,7 @@ class FormEditor extends Component {
 
         // force an update here
 
+
         this.forceUpdate();
         logger.info('The editor is initialising');
       } );
@@ -126,8 +127,13 @@ class FormEditor extends Component {
       for(let i = 0; i < entityCnt; i++)
           resp.addParticipant(responses[i]);
 
-      this.forceUpdate();
+      // this.state.document.synch(true);
+      this.setState(this.state);
+
+
     });
+
+
 
   }
   //TODO: This will test validity of entries first
@@ -137,7 +143,6 @@ class FormEditor extends Component {
     let doc = this.state.document;
     doc.interactions().map(interaction=>{
       console.log(interaction.name());
-      console.log(interaction.description());
       interaction.elements().map(el => {
         console.log(el.name());
       });
