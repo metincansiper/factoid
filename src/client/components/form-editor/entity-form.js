@@ -38,18 +38,17 @@ class EntityForm extends Component {
 
   render() {
 
-
     let hFunc;
     let hCompletedStatus;
 
-    if(this.state.entity.completed())
+    if(this.state.entity && this.state.entity.completed())
       hCompletedStatus = h('i.material-icons.entity-info-complete-icon', 'check_circle');
     else
       hCompletedStatus = h('i.material-icons', 'help');
 
     hFunc = h('div.form-interaction', [
         h('input[type="text"].' + this.state.style, {
-          value: this.state.entity.name(),
+          value: this.state.entity && this.state.entity.name(),
           placeholder: this.state.placeholder,
           onChange: e => this.updateEntityName(e.target.value),
           onClick: e => this.updateGrounding(true)
