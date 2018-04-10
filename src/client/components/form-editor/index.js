@@ -1,4 +1,3 @@
-const { Component } = require('react');
 const DirtyComponent = require('../dirty-component');
 const h = require('react-hyperscript');
 const io = require('socket.io-client');
@@ -156,6 +155,7 @@ class FormEditor extends DirtyComponent {
       doc.remove(intn);
       // intn.deleted = true;
 
+
       this.dirty();
       // this.forceUpdate();
 
@@ -183,6 +183,8 @@ class FormEditor extends DirtyComponent {
   render(){
     let doc = this.state.document;
     let self = this;
+
+    this.state.dirty = false;
 
     const forms = [
       {type: 'Protein Modification' , clazz: ProteinModificationForm,entityDescriptions:['input', 'output'], description:"One protein chemically modifies another protein.", defaultDescription: "activates-phosphorylation"},
