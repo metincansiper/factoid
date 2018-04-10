@@ -39,6 +39,7 @@ class Popover extends React.Component {
   }
 
   componentDidMount(){
+
     let p = this.props;
     let target = p.target || ReactDom.findDOMNode(this).children[0];
     let options = p.tippy;
@@ -69,6 +70,7 @@ class Popover extends React.Component {
   }
 
   componentWillUnmount(){
+
     emitter.removeListener('esc', this.hideTippy);
 
     this.destroyTippy();

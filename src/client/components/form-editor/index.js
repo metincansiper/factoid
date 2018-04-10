@@ -133,9 +133,33 @@ class FormEditor extends Component {
 
     });
 
+  }
 
+  deleteInteractionRow(data){
+    let doc = this.state.document;
+    let intn = data.interaction;
+
+    let els = intn.elements();
+    let elsLength = els.length;
+
+
+    let promiseArr = [];
+    for(let i = 0; i < elsLength; i++) {
+      promiseArr.push(Promise.try(() => els[i].synch()).then(() => intn.removeParticipant(els[i])).then(doc.remove(els[i])));
+    }
+
+
+    Promise.all(promiseArr).then( () => {
+
+      doc.remove(intn);
+      // intn.deleted = true;
+
+      this.forceUpdate();
+
+    });
 
   }
+
   //TODO: This will test validity of entries first
   //Convert to biopax or show in the editor
   submit(){
@@ -173,21 +197,13 @@ class FormEditor extends Component {
 
     forms.forEach(function(form){
 
-
-      // let formContent = doc.interactions().map(interaction => {
-      //
-      //   if(interaction.name() == form.type)
-      //     return h(form.clazz, {document:doc, interaction:interaction, description: form.type});
-      //     else return null;
-      // });
+      let formContent = doc.interactions().map(interaction => {
+        if(interaction.name() === form.type)
+          return h('div', [h('button.delete-interaction', { onClick: e => {self.deleteInteractionRow({interaction:interaction}); } }, 'X'), h(form.clazz, { document:doc, interaction:interaction, description: form.type})] );
+          else return null;
+      });
 
 
-      console.log("rerendered????");
-      let formContent = [];
-      for(let  i = 0; i < doc.interactions().length; i++){
-        if(doc.interactions()[i].name() == form.type)
-            formContent[i] =  h(form.clazz, {caller: self, document:doc, interaction:doc.interactions()[i], description: form.type});
-      }
       //update form
       let hFunc = h('div', [
         h('h2', form.type),
