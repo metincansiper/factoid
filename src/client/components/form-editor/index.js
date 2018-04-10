@@ -1,4 +1,5 @@
 const { Component } = require('react');
+const DirtyComponent = require('../dirty-component');
 const h = require('react-hyperscript');
 const io = require('socket.io-client');
 const _ = require('lodash');
@@ -20,7 +21,7 @@ const PhysicalInteractionForm = require('./physical-interaction-form');
 const ActivationInhibitionForm = require('./activation-inhibition-form');
 
 
-class FormEditor extends Component {
+class FormEditor extends DirtyComponent {
   constructor(props){
     super(props);
 
@@ -128,12 +129,13 @@ class FormEditor extends Component {
           resp.addParticipant(responses[i]);
 
       // this.state.document.synch(true);
-      this.setState(this.state);
-
+      // this.setState(this.state);
+      this.dirty();
 
     });
 
   }
+
 
   deleteInteractionRow(data){
     let doc = this.state.document;
@@ -154,7 +156,8 @@ class FormEditor extends Component {
       doc.remove(intn);
       // intn.deleted = true;
 
-      this.forceUpdate();
+      this.dirty();
+      // this.forceUpdate();
 
     });
 
