@@ -48,7 +48,7 @@ class InteractionForm extends Component {
       intn.deleted = true;
 
       this.setState(this.state);
-      this.forceUpdate();
+      // this.forceUpdate();
     });
 
   }
@@ -57,7 +57,7 @@ class InteractionForm extends Component {
   updateInteractionType(nextType){
     const intn = this.state.interaction;
     intn.description(nextType);
-    this.forceUpdate();
+    // this.forceUpdate();
   }
 }
 

@@ -17,24 +17,28 @@ class EntityForm extends Component {
 
   updateEntityName(newName) {
     this.state.entity.name(newName);
-    this.forceUpdate();
+      this.setState(this.state);
+
+      // this.forceUpdate();
   }
-
-  getDerivedStateFromProps(showEntityInfo){
-    this.state.showEntityInfo = showEntityInfo;
-
-    if(showEntityInfo){
-
-    }
-  }
+  //
+  // getDerivedStateFromProps(showEntityInfo){
+  //   this.state.showEntityInfo = showEntityInfo;
+  //
+  //   // if(showEntityInfo){
+  //   //
+  //   // }
+  // }
 
   updateGrounding(stateVal){
 
-    if(this.state.entity.name().length > 0)
-      this.state.showEntityInfo = stateVal;
-    this.setState(this.state);
+    if(this.state.entity.name().length > 0) {
+        // this.state.showEntityInfo = stateVal;
+        this.setState({showEntityInfo: stateVal});
+        this.forceUpdate();
 
-    console.log("clicked");
+        console.log("clicked");
+    }
   }
 
   render() {
