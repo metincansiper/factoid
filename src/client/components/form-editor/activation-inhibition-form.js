@@ -8,8 +8,6 @@ class ActivationInhibitionForm extends InteractionForm{
 
   render(){
     const intn = this.state.interaction;
-    if(intn.deleted)
-      return null;
     const lEnt = intn.elements()[0];
     const rEnt = intn.elements()[1];
 

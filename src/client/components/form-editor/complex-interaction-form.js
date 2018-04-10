@@ -8,8 +8,6 @@ class ComplexInteractionForm extends InteractionForm {
   render(){
 
     const intn = this.state.interaction;
-    if(intn.deleted)
-      return null;
 
     let hFunc = intn.elements().map(el =>{
       return h('div', [h(EntityForm, {entity:el, placeholder:'Protein', tooltipContent:'Name or ID', style: 'form-entity-small', document: this.state.document})

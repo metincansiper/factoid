@@ -17,12 +17,14 @@ class Popover extends React.Component {
     super( props );
 
     this.state = {};
+
   }
 
   render(){
     let p = this.props;
 
     return h( 'span.popover-target', {}, p.children );
+
   }
 
   renderTipContent(){
@@ -33,6 +35,7 @@ class Popover extends React.Component {
     }
 
     ReactDom.render( el, this.state.content );
+
   }
 
   componentDidMount(){
@@ -52,13 +55,17 @@ class Popover extends React.Component {
     let show = () => tippy.show();
     let hide = () => tippy.hide();
 
+
     if( p.show ){ p.show( show ); }
     if( p.hide ){ p.hide( hide ); }
+
+
 
     this.hideTippy = () => tippy.hide();
     this.destroyTippy = () => tippy.destroy();
 
     emitter.on('esc', this.hideTippy);
+
   }
 
   componentWillUnmount(){
@@ -68,7 +75,9 @@ class Popover extends React.Component {
   }
 
   componentDidUpdate(){
+
     this.renderTipContent();
+
   }
 }
 

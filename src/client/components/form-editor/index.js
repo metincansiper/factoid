@@ -46,6 +46,8 @@ class FormEditor extends Component {
       document: doc
     };
 
+
+
     Promise.try( () => doc.load() )
       .then( () => logger.info('The doc already exists and is now loaded') )
       .catch( err => {
@@ -67,7 +69,6 @@ class FormEditor extends Component {
         }
 
         // force an update here
-
         this.forceUpdate();
         logger.info('The editor is initialising');
       } );
@@ -126,10 +127,39 @@ class FormEditor extends Component {
       for(let i = 0; i < entityCnt; i++)
           resp.addParticipant(responses[i]);
 
-      this.forceUpdate();
+      // this.state.document.synch(true);
+      this.setState(this.state);
+
+
     });
 
   }
+
+  deleteInteractionRow(data){
+    let doc = this.state.document;
+    let intn = data.interaction;
+
+    let els = intn.elements();
+    let elsLength = els.length;
+
+
+    let promiseArr = [];
+    for(let i = 0; i < elsLength; i++) {
+      promiseArr.push(Promise.try(() => els[i].synch()).then(() => intn.removeParticipant(els[i])).then(doc.remove(els[i])));
+    }
+
+
+    Promise.all(promiseArr).then( () => {
+
+      doc.remove(intn);
+      // intn.deleted = true;
+
+      this.forceUpdate();
+
+    });
+
+  }
+
   //TODO: This will test validity of entries first
   //Convert to biopax or show in the editor
   submit(){
@@ -137,7 +167,6 @@ class FormEditor extends Component {
     let doc = this.state.document;
     doc.interactions().map(interaction=>{
       console.log(interaction.name());
-      console.log(interaction.description());
       interaction.elements().map(el => {
         console.log(el.name());
       });
@@ -168,12 +197,12 @@ class FormEditor extends Component {
 
     forms.forEach(function(form){
 
-
       let formContent = doc.interactions().map(interaction => {
-        if(interaction.name() == form.type)
-          return h(form.clazz, {document:doc, interaction:interaction, description: form.type});
+        if(interaction.name() === form.type)
+          return h('div', [h('button.delete-interaction', { onClick: e => {self.deleteInteractionRow({interaction:interaction}); } }, 'X'), h(form.clazz, { document:doc, interaction:interaction, description: form.type})] );
           else return null;
       });
+
 
       //update form
       let hFunc = h('div', [

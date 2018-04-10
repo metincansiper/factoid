@@ -8,8 +8,12 @@ class InteractionForm extends Component {
     this.state = this.data = {
       interaction: props.interaction,
       description: props.description,
-      document: props.document
+      document: props.document,
+      caller: props.caller
     };
+
+    this.state.document.synch();
+
   }
   addEntityRow(data){
 
@@ -28,30 +32,39 @@ class InteractionForm extends Component {
       .then( () => doc.add(el) )
       .then( () => el )
       .then( () => this.state.interaction.addParticipant(el) )
-      .then(() => this.forceUpdate());
+      .then( () => this.state.caller.forceUpdate() )
+      .then(() => this.setState(this.state));
   }
 
-  deleteInteraction(){
-    let doc = this.state.document;
-    let intn = this.state.interaction;
-
-    let els = intn.elements();
-    let elsLength = els.length;
-
-    let promiseArr = [];
-    for(let i = 0; i < elsLength; i++)
-      promiseArr.push(Promise.try( () => els[i].synch()).then(() => intn.removeParticipant(els[i])).then(doc.remove(els[i])));
-
-    Promise.all(promiseArr).then( () => {
-
-      doc.remove(intn);
-      intn.deleted = true;
-
-      this.setState(this.state);
-      // this.forceUpdate();
-    });
-
-  }
+  //
+  // deleteInteraction(){
+  //   let doc = this.state.document;
+  //   let intn = this.state.interaction;
+  //
+  //   let els = intn.elements();
+  //   let elsLength = els.length;
+  //
+  //
+  //   let promiseArr = [];
+  //   for(let i = 0; i < elsLength; i++) {
+  //     promiseArr.push(Promise.try(() => els[i].synch()).then(() => intn.removeParticipant(els[i])).then(doc.remove(els[i])));
+  //   }
+  //
+  //
+  //   Promise.all(promiseArr).then( () => {
+  //
+  //     doc.remove(intn);
+  //     intn.deleted = true;
+  //
+  //
+  //     // this.state.caller.forceUpdate();
+  //
+  //
+  //     this.forceUpdate();  //this tries to render the child class calling delete and updates by not rendering it.
+  //
+  //   });
+  //
+  // }
 
 
   updateInteractionType(nextType){

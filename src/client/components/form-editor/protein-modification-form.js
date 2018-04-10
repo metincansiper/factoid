@@ -7,10 +7,9 @@ let EntityForm = require('./entity-form.js');
 class ProteinModificationForm extends InteractionForm {
   render(){
 
+
     let intn = this.state.interaction;
 
-    if(intn.deleted)
-      return null;
 
     let lEnt = intn.elements()[0];
     let rEnt = intn.elements()[1];
@@ -63,8 +62,8 @@ class ProteinModificationForm extends InteractionForm {
           h('option', { value: 'other' }, 'other')
         ])
       ]),
-      h(EntityForm, { entity: rEnt, placeholder:'Controlled protein' , tooltipContent:'Name or ID', document: this.state.document} ),
-      h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
+      h(EntityForm, { entity: rEnt, placeholder:'Controlled protein' , tooltipContent:'Name or ID', document: this.state.document} )
+      // h('button.delete-interaction', { onClick: e => {this.deleteInteraction(); } }, 'X')
     ]);
   }
 }
