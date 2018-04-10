@@ -2,6 +2,7 @@ const { Component } = require('react');
 const _ = require('lodash');
 const h = require('react-hyperscript');
 const Popover = require('../popover/popover');
+const Tooltip = require('../popover/tooltip');
 const ElementInfo = require('../element-info/element-info');
 
 
@@ -65,6 +66,7 @@ class EntityForm extends Component {
         tippy: {
           // trigger: 'mouseenter focus',
           // trigger: 'click',
+          hideOnClick: false,
           html: h(ElementInfo, { element: this.state.entity, document: this.state.document})}}, [hFunc]);
 
     }
