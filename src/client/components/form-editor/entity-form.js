@@ -2,6 +2,7 @@ const { Component } = require('react');
 const _ = require('lodash');
 const h = require('react-hyperscript');
 const Popover = require('../popover/popover');
+const Tooltip = require('../popover/tooltip');
 const ElementInfo = require('../element-info/element-info');
 
 
@@ -18,20 +19,30 @@ class EntityForm extends Component {
 
   updateEntityName(newName) {
     this.state.entity.name(newName);
+
     this.setState(this.state);
 
-  }
-
-  updateGrounding(){
-
-    if(this.state.entity.name().length > 0)
-      this.state.showEntityInfo = true;
-    this.setState(this.state);
 
   }
 
 
-  render() {
+
+  updateGrounding(stateVal) {
+
+      if (this.state.entity.name().length > 0) {
+          // this.state.showEntityInfo = stateVal;
+          this.setState({showEntityInfo: stateVal});
+          this.forceUpdate();
+
+
+
+      }
+  }
+
+
+
+
+  render(){
 
     let hFunc;
     let hCompletedStatus;
@@ -59,6 +70,7 @@ class EntityForm extends Component {
         tippy: {
           // trigger: 'mouseenter focus',
           // trigger: 'click',
+          hideOnClick: false,
           html: h(ElementInfo, { element: this.state.entity, document: this.state.document})}}, [hFunc]);
 
     }
