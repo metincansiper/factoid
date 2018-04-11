@@ -6,6 +6,7 @@ class InteractionForm extends Component {
   constructor(props){
     super(props);
     this.state = this.data = {
+      id: props.id,
       interaction: props.interaction,
       description: props.description,
       document: props.document,
@@ -14,9 +15,9 @@ class InteractionForm extends Component {
 
     this.state.document.synch();
 
+
   }
   addEntityRow(data){
-
     let doc = this.state.document;
 
     let el = doc.factory().make({
@@ -36,11 +37,10 @@ class InteractionForm extends Component {
   }
 
 
-
   updateInteractionType(nextType){
     const intn = this.state.interaction;
     intn.description(nextType);
-    // this.forceUpdate();
+    this.forceUpdate();
   }
 }
 

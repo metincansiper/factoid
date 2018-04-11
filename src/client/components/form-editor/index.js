@@ -151,16 +151,9 @@ class FormEditor extends DirtyComponent {
       promiseArr.push(Promise.try(() => intn.removeParticipant(els[i])).then(doc.remove(els[i])));
     }
 
-
     Promise.all(promiseArr).then( () => {
-
       doc.remove(intn);
-      // intn.deleted = true;
-
-
       this.dirty();
-      // this.forceUpdate();
-
     });
 
   }
@@ -179,8 +172,6 @@ class FormEditor extends DirtyComponent {
     });
 
   }
-
-
 
   render(){
     let doc = this.state.document;

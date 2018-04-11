@@ -33,25 +33,90 @@ class EntityForm extends DirtyComponent {
   areAssociationsTheSame(assoc1, assoc2){
     return (assoc1.id === assoc2.id && assoc1.modification === assoc2.modification && assoc1.organism === assoc2.organism);
   }
+
   /***
    * Combine the completed entities if they have the same grounding information and database id
    */
   mergeWithOtherEntities(){
 
-    if(this.state.entity.completed()) {
+    if(this.state.entity.completed()) {  //TODO: open this
       let entity = this.state.entity;
+      let mergedEntity;
 
-      this.state.document.entities().map((el) => {
+      //TODO : open this -- to skip grounding
+
+      // we can assume that all the other elements in the list are unique
+      for(let i = 0; i < this.state.document.entities().length; i++) {
+        let el = this.state.document.entities()[i];
         if (el.id() !== entity.id() && el.completed()) {
-          if(this.areAssociationsTheSame(el.association(), entity.association())){
-            // this.state.document.remove(this.state.entity);
-            this.state.entity = el;
+          if (this.areAssociationsTheSame(el.association(), entity.association())) {
 
-            console.log("combined the two " + this.state.entity.id() + " and " +  el.id());
+            mergedEntity = el;
+
+            console.log("merging the two " + this.state.entity.id() + " and " + el.id());
+            break;
           }
         }
+      }
 
-      });
+
+//     //todo: remove this
+//       for(let i = 0; i < this.state.document.entities().length; i++) {
+//         let el = this.state.document.entities()[i];
+//         if (el.id() !== entity.id() && entity.name().length > 0 && el.name() == entity.name()) {
+//
+//             mergedEntity = el;
+// ;
+//             console.log("merging the two " + this.state.entity.id() + " and " + el.id());
+//             break;
+//           }
+//         }
+
+
+
+        // //find the entity index
+
+      if(mergedEntity) {
+
+        //update the interactions containing this entity
+        let updateParticipants = ((intn) => {
+          if( intn.has( entity )) {
+
+            intn.addParticipant(mergedEntity);
+
+
+            // let entInd = intn.participants().indexOf(entity);
+            //
+            // console.log(entInd);
+            //
+            // //to shift others
+            // let restParticipants = _.clone(intn.participants());
+            // for(let i = entInd; i < intn.participants().length; i++){
+            //   intn.removeParticipant(intn.participants()[i]);
+            // }
+            // intn.addParticipant(mergedEntity);
+            //
+            // console.log(restParticipants.length);
+            // //add others back
+            // for(let i = entInd + 1; i < restParticipants.length; i++){
+            //   intn.addParticipant(restParticipants[i]);
+            // }
+            //
+
+            intn.setParticipantType(mergedEntity, intn.getParticipantType(entity));
+          }
+          else
+            return Promise.resolve();
+        });
+
+        Promise.all(  this.state.document.interactions().map( updateParticipants ) );
+
+
+        //update the entity of this form
+        this.state.entity = mergedEntity;
+        //we can now remove our entity
+        this.state.document.remove(entity);
+      }
     }
   }
 

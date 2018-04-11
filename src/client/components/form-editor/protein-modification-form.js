@@ -28,7 +28,7 @@ class ProteinModificationForm extends InteractionForm {
 
     //Treat two options(activation + modification) as one interaction type
     return h('div.form-interaction', [
-      h(EntityForm, { entity: lEnt ,  placeholder:'Controller protein', tooltipContent:'Name or ID', document: this.state.document}),
+      h(EntityForm, { entity: lEnt ,   placeholder:'Controller protein', tooltipContent:'Name or ID', document: this.state.document}),
       h('span', [
         h('select.form-options', {id:('activation-'+ intn.id()), value: actVal,
           onChange: e => {
