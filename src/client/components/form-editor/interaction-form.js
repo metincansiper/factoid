@@ -32,7 +32,6 @@ class InteractionForm extends Component {
       .then( () => doc.add(el) )
       .then( () => el )
       .then( () => this.state.interaction.addParticipant(el) )
-      .then( () => this.state.caller.forceUpdate() )
       .then(() => this.setState(this.state));
   }
 
