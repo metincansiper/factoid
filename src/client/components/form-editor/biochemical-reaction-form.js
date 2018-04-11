@@ -51,7 +51,6 @@ class BiochemicalReactionForm extends InteractionForm{
           [ h('i.material-icons.add-new-entity-icon', 'add'), ''])
       ]),
 
-      h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
     ]);
   }
 }

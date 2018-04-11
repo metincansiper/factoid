@@ -38,12 +38,6 @@ class InteractionForm extends Component {
 
 
 
-  // componentWillUnmount(){
-  //   console.log("will unmount");
-  //   console.log(this.state.interaction.elements() && this.state.interaction.elements()[0] && this.state.interaction.elements()[0].name());
-  // }
-
-
   updateInteractionType(nextType){
     const intn = this.state.interaction;
     intn.description(nextType);

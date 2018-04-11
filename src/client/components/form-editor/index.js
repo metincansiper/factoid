@@ -118,6 +118,8 @@ class FormEditor extends DirtyComponent {
         entArr.push(self.addElement({description: data.entityDescriptions[i]}));
 
     let intn = this.addInteraction(data);
+
+
     entArr.push(intn);
 
 
@@ -146,7 +148,7 @@ class FormEditor extends DirtyComponent {
 
     let promiseArr = [];
     for(let i = 0; i < elsLength; i++) {
-      promiseArr.push(Promise.try(() => els[i].synch()).then(() => intn.removeParticipant(els[i])).then(doc.remove(els[i])));
+      promiseArr.push(Promise.try(() => intn.removeParticipant(els[i])).then(doc.remove(els[i])));
     }
 
 
@@ -204,7 +206,7 @@ class FormEditor extends DirtyComponent {
 
       let formContent = doc.interactions().map(interaction => {
         if(interaction.name() === form.type)
-          return h('div', [h('button.delete-interaction', { onClick: e => {self.deleteInteractionRow({interaction:interaction}); } }, 'X'), h(form.clazz, { document:doc, interaction:interaction, description: form.type})] );
+          return h('div', [h('button.delete-interaction', { onClick: e => {self.deleteInteractionRow({interaction:interaction}); } }, 'X'), h(form.clazz, {key: interaction.id(), document:doc, interaction:interaction, description: form.type})] );
           else return null;
       });
 

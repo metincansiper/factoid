@@ -34,7 +34,6 @@ class LocationChangeForm extends InteractionForm {
       h(EntityForm, { entity: oldLocEnt, placeholder: 'Old location', style: 'form-entity-medium', document: this.state.document}),
       h('h3.form-entity-title', 'to'),
       h(EntityForm, { entity: newLocEnt, placeholder: 'New location' , style: 'form-entity-medium', document: this.state.document}),
-      h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
     ]);
   }
 }

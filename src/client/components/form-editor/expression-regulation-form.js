@@ -25,7 +25,6 @@ class ExpressionRegulationForm extends InteractionForm {
         ])
       ]),
       h(EntityForm, { entity: rEnt, placeholder: 'Enter target protein' , document: this.state.document} ),
-      h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
     ]);
 
   }

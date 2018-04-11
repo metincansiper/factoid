@@ -26,7 +26,6 @@ class ActivationInhibitionForm extends InteractionForm{
         ])
       ]),
       h(EntityForm, { entity: rEnt, placeholder: 'Target protein' , document: this.state.document} ),
-      h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
     ]);
 
     }

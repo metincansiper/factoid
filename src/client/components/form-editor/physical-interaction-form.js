@@ -19,7 +19,6 @@ class PhysicalInteractionForm extends InteractionForm{
         h('button.form-entity-adder', { onClick: e => {this.addEntityRow();}},
           [ h('i.material-icons.add-new-entity-icon', 'add'), ''])
       ]),
-      h('button.delete-interaction', { onClick: e => this.deleteInteraction() }, 'X')
     ]);
   }
 

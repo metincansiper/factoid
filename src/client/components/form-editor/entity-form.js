@@ -62,11 +62,11 @@ class EntityForm extends DirtyComponent {
     this.mergeWithOtherEntities();
     return true;
   }
+
   render(){
 
     let hFunc;
     let hCompletedStatus;
-
 
     if(this.state.entity && this.state.entity.completed())
       hCompletedStatus = h('i.material-icons.entity-info-complete-icon', 'check_circle');
@@ -85,16 +85,10 @@ class EntityForm extends DirtyComponent {
 
 
     if(this.state.showEntityInfo){
-
       hFunc = h(Popover, {
-
         tippy: {
-          // trigger: 'mouseenter focus',
-          // trigger: 'click',
           hideOnClick: false,
-
-          html: h(ElementInfo, { element: this.state.entity, document: this.state.document})
-
+          html: h(ElementInfo, {key:this.state.entity.name(), element: this.state.entity, document: this.state.document})
         }}, [hFunc]);
     }
 
