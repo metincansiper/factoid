@@ -35,10 +35,14 @@
 
 .action-section {
   padding: 0 10px 10px;
+  height: 20%;
+  margin-bottom: 50px;
+  overflow: scroll;
 }
 
 .action-logger-title {
   font-size: 2em;
+  margin-bottom: 10px;
 }
 
 .close-menu {
