@@ -59,7 +59,7 @@ let runLayout = doc => {
 http.get('/my-factoids', (req, res) => {
   (
     Promise.try( () => loadTable( 'document' ) )
-      .then( db => db.rethink.table('document').pluck(['id', 'secret']).run(db.conn) )
+      .then( db => db.rethink.table('document').pluck(['id', 'secret', 'name']).run(db.conn) )
       .then( r => r.toArray() )
       .then( results => res.json(results) )
   );

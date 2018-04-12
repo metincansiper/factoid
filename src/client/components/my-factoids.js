@@ -19,14 +19,21 @@ class MyFactoids extends Component {
   }
   render(){
     let factoids = this.state.factoids.map(factoid => {
-      return h('div', [
-        h(Link, { className: 'plain-link', to: `/document/${factoid.id}/${factoid.secret}`}, 'untitled factoid')
+      return h('div.factoid-entry', [
+        h(Link, {
+          className: 'plain-link',
+          to: `/document/${factoid.id}/${factoid.secret}`
+        },
+          factoid.name === '' ? 'Untitled document' : factoid.name)
       ]);
     });
 
     let content = this.state.factoidsLoaded ? h('div.factoid-list', [
-      h('h2', 'My Factoids'),
-      ...factoids
+      h('div', [
+        h('h2.my-factoids-title', 'My Factoids'),
+        ...factoids
+
+      ])
     ]) : h('div', 'loading');
 
     return h('div.my-factoids', [
