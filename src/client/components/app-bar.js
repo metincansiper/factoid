@@ -7,6 +7,21 @@ const { Component } = require('react');
 // document
 // controller
 class AppBar extends Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
+      docName: props.document.name()
+    };
+  }
+
+  updateDocName(newVal){
+    this.props.document.name(newVal);
+    this.setState({
+      docName: newVal
+    });
+  }
+
   render(){
     const p = this.props;
     const id = p.document.id();
@@ -14,7 +29,15 @@ class AppBar extends Component {
     const bus = p.bus;
 
     return h('div.app-bar', [
-      h('h2.app-bar-title', 'Factoid'),
+      h('div.app-bar-title-container', [
+        h('h2.app-bar-title', 'Factoid'),
+        h('input.doc-name', {
+          type: 'text',
+          placeholder: 'Untitled document',
+          value:  this.state.docName,
+          onChange: e => this.updateDocName(e.target.value)
+        })
+      ]),
       h('div.app-bar-buttons', [
         h(Link, { to: '/new/seed'}, [
           h('button.new-factoid', '+ New Factoid'),

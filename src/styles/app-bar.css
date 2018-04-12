@@ -12,12 +12,46 @@
   justify-content: space-between;
   padding: 10px;
 
+  & .app-bar-title-container {
+    display: flex;
+    flex-direction: row;
+  }
+
   & .app-bar-title {
     margin-top: 0;
     padding-top: 10px;
   }
 
   & .app-bar-buttons {
+    width: 600px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     padding: 10px 20px;
   }
+}
+
+.doc-name {
+  margin-left: 5px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  padding: 5px;
+  /* font-style: italic; */
+  border: 0 !important;
+  color: #212F3D;
+  font-weight: bold;
+}
+
+.doc-name::placeholder {
+  font-style: italic;
+}
+
+.doc-name:focus {
+  border-radius: 0;
+  border: 1px solid #767676 !important;
+}
+
+.doc-name:hover {
+  border-radius: 0;
+  border: 1px solid #767676 !important;
 }
