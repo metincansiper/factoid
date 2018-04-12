@@ -335,7 +335,7 @@ class Editor extends React.Component {
     return h('div.editor' + ( this.state.initted ? '.editor-initted' : '' ), this.state.initted ? [
       h(AppBar, { controller, document, bus }),
       h(Buttons, { controller, document, bus }),
-      incompleteNotification ? h(CornerNotification, { notification: incompleteNotification }) : h('span'),
+      // incompleteNotification ? h(CornerNotification, { notification: incompleteNotification }) : h('span'),
       h(UndoRemove, { controller, document, bus }),
       h(ActionLogger, { bus, document }),
       h('div.editor-graph#editor-graph')
