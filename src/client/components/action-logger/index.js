@@ -162,7 +162,6 @@ class ActionLogger extends DirtyComponent {
     let content;
     if (this.state.open) {
       content = h('div.action-logger', [
-        h('div.close-menu', { onClick: () => this.setState({open: !this.state.open}) }, '--'),
         h('div.action-logger-title', 'ACTION HISTORY'),
         h('div.action-section', [
           h('ul', history)

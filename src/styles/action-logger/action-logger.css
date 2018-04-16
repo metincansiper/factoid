@@ -4,44 +4,29 @@
   opacity: 0.8;
   bottom: 0;
   right: 0;
-  width: 30em;
+  width: 20em;
   height: 55em;
   background-color: #EEEEEE;
   color: #212F3D;
   padding: 10px;
-  overflow: scroll;
+  overflow-y: scroll;
   border: 1px solid #767676;
 }
 
 .action-logger-minimized {
-  position: fixed;
-  z-index: 1;
-  opacity: 0.8;
-  bottom: 0;
-  right: 0;
-  width: 500px;
-  height: 25px;
-  background-color: #EEEEEE;
-  color: #212F3D;
-  padding: 10px;
-  overflow: scroll;
-  border: 1px solid #767676;
-}
-.minimized-timeline {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  display: none;
 }
 
 .action-section {
   padding: 0 10px 10px;
   height: 20%;
   margin-bottom: 50px;
-  overflow: scroll;
+  overflow-y: inherit;
 }
 
 .action-logger-title {
   font-size: 2em;
+  margin-top: 20px;
   margin-bottom: 10px;
 }
 
