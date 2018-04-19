@@ -56,6 +56,15 @@ let runLayout = doc => {
   return Promise.try( run ).then( getDoc );
 };
 
+http.get('/my-factoids', (req, res) => {
+  (
+    Promise.try( () => loadTable( 'document' ) )
+      .then( db => db.rethink.table('document').pluck(['id', 'secret', 'name']).run(db.conn) )
+      .then( r => r.toArray() )
+      .then( results => res.json(results) )
+  );
+});
+
 // get existing doc
 http.get('/:id', function( req, res ){
   let id = req.params.id;

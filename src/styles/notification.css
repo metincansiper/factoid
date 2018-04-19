@@ -85,7 +85,7 @@
   z-index: 3;
   position: fixed;
   right: 0;
-  top: 0;
+  top: 4em;
   margin: 1em;
   background: #333;
   border-radius: 0.25em;

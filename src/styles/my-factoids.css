@@ -1,0 +1,16 @@
+.factoid-list {
+  height: 100vh;
+  width: 100vw;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.my-factoids-title {
+  font-size: 2em;
+}
+
+.factoid-entry {
+  margin-bottom: 20px;
+}

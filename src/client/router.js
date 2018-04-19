@@ -12,13 +12,19 @@ const DebugDocumentSeeder = require('./components/debug-document-seeder');
 const ExampleDocument = require('./components/example-document');
 const DocumentSeeder = require('./components/document-seeder');
 const DocumentViewChooser = require('./components/document-view-chooser');
-
+const MyFactoids = require('./components/my-factoids');
 
 let routes = [
   {
     path: '/',
     render: () => {
       return h(Home);
+    }
+  },
+  {
+    path: '/my-factoids',
+    render: props => {
+      return h( MyFactoids, props);
     }
   },
   {

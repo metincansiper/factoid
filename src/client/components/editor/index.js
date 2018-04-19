@@ -5,16 +5,23 @@ const EventEmitter = require('eventemitter3');
 const io = require('socket.io-client');
 const _ = require('lodash');
 const Promise = require('bluebird');
+
 const logger = require('../../logger');
-const makeCytoscape = require('./cy');
-const Document = require('../../../model/document');
 const debug = require('../../debug');
-const defs = require('./defs');
+
+const Document = require('../../../model/document');
 const { getId, defer } = require('../../../util');
+
+const makeCytoscape = require('./cy');
+const defs = require('./defs');
+const UndoRemove = require('./undo-remove');
 const Buttons = require('./buttons');
+
 const Notification = require('../notification');
 const CornerNotification = require('../notification/corner');
-const UndoRemove = require('./undo-remove');
+const ActionLogger = require('../action-logger');
+
+const AppBar = require('../app-bar');
 
 const RM_DEBOUNCE_TIME = 500;
 const RM_AVAIL_DURATION = 5000;
@@ -326,9 +333,11 @@ class Editor extends React.Component {
     let controller = this;
 
     return h('div.editor' + ( this.state.initted ? '.editor-initted' : '' ), this.state.initted ? [
+      h(AppBar, { controller, document, bus, inGraphEditor: true }),
       h(Buttons, { controller, document, bus }),
-      incompleteNotification ? h(CornerNotification, { notification: incompleteNotification }) : h('span'),
+      // incompleteNotification ? h(CornerNotification, { notification: incompleteNotification }) : h('span'),
       h(UndoRemove, { controller, document, bus }),
+      h(ActionLogger, { bus, document, inGraphEditor: true }),
       h('div.editor-graph#editor-graph')
     ] : []);
   }
