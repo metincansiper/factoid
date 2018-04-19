@@ -38,8 +38,9 @@ class InteractionForm extends Component {
       .then( () => el.create() )
       .then( () => doc.add(el) )
       .then( () => el )
-      .then( () => this.state.interaction.addParticipant(el) )
-      .then(() => this.setState(this.state));
+      .then( () => { this.state.interaction.addParticipant(el)} )
+
+  .then(() => this.setState(this.state));
   }
 
 

@@ -62,6 +62,7 @@ class ProteinModificationForm extends InteractionForm {
         ])
       ]),
       h(EntityForm, { entity: rEnt, placeholder:'Controlled protein' , tooltipContent:'Name or ID', document: this.state.document} )
+
     ]);
   }
 }
