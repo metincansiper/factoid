@@ -9,10 +9,9 @@ class ProteinModificationForm extends InteractionForm {
 
 
     let intn = this.state.interaction;
+    let lEnt = this.getEntityForParticipantIndex(0);
+    let rEnt = this.getEntityForParticipantIndex(1);
 
-
-    let lEnt = intn.elements()[0];
-    let rEnt = intn.elements()[1];
 
 
     let actVal = intn.description().split('-')[0];

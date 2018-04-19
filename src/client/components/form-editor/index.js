@@ -114,8 +114,10 @@ class FormEditor extends DirtyComponent {
     let entArr = [];
     const entityCnt = data.entityDescriptions.length;
 
+
+
     for(let i = 0; i < entityCnt; i++)
-        entArr.push(self.addElement({description: data.entityDescriptions[i]}));
+        entArr.push(self.addElement());
 
     let intn = this.addInteraction(data);
 
@@ -124,10 +126,16 @@ class FormEditor extends DirtyComponent {
 
 
     Promise.all(entArr).then(responses => {
-      let resp = responses[entityCnt];
+      let resp = responses[entityCnt]; // this it the interaction
 
-      for(let i = 0; i < entityCnt; i++)
-          resp.addParticipant(responses[i]);
+
+      //TODO: Updating the description field to store interaction positions for now
+      //should allocate a separate field
+      for(let i = 0; i < entityCnt; i++) {
+        responses[i].description = {}; //create a new field for entities
+        responses[i].description[resp.id()] = i;
+        resp.addParticipant(responses[i]);
+      }
 
       // this.state.document.synch(true);
       // this.setState(this.state);

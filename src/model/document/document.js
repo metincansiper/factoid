@@ -172,6 +172,7 @@ class Document {
 
     this.toggledOrganisms().forEach( addToCount );
 
+
     (
       this.entities()
       .filter( entIsAssocd )

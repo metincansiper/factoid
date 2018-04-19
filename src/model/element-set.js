@@ -119,6 +119,7 @@ class ElementSet {
     return Promise.all( this.elements().map( el => el.synch( enable ) ) );
   }
 
+
   add( ele, opts = {} ){
     if( this.has( ele ) ){ return Promise.resolve(); } // no duplicates
 
@@ -167,6 +168,7 @@ class ElementSet {
 
     return updatePromise;
   }
+
 
   has( ele ){
     return this.elementsById.has( getId(ele) );

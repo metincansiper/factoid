@@ -8,12 +8,10 @@ class LocationChangeForm extends InteractionForm {
   render(){
     const intn = this.state.interaction;
 
-    const lEnt = intn.elements()[0];
-    const rEnt = intn.elements()[1];
-    const oldLocEnt = intn.elements()[2];
-    const newLocEnt = intn.elements()[3];
-
-
+    const lEnt = this.getEntityForParticipantIndex(0);
+    const rEnt = this.getEntityForParticipantIndex(1);
+    const oldLocEnt = this.getEntityForParticipantIndex(2);
+    const newLocEnt = this.getEntityForParticipantIndex(3);
 
 
     intn.setParticipantType(newLocEnt, 'positive');

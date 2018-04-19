@@ -7,8 +7,8 @@ class ExpressionRegulationForm extends InteractionForm {
 
   render(){
     const intn = this.state.interaction;
-    const lEnt = intn.elements()[0];
-    const rEnt = intn.elements()[1];
+    const lEnt = this.getEntityForParticipantIndex(0);
+    const rEnt = this.getEntityForParticipantIndex(1);
 
     if(intn.description().indexOf("activate") > - 1)
       intn.setParticipantType(rEnt, 'positive');

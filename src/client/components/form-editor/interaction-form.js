@@ -14,9 +14,15 @@ class InteractionForm extends Component {
     };
 
     this.state.document.synch();
-
-
   }
+
+  //Returns the interaction participant with the given index
+  getEntityForParticipantIndex(ind){
+    const intId = this.state.interaction.id();
+
+    return this.state.interaction.elements().filter(el => el.description[intId] === ind)[0];
+  }
+
   addEntityRow(data){
     let doc = this.state.document;
 

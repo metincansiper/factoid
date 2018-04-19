@@ -43,9 +43,9 @@ class EntityForm extends DirtyComponent {
       let entity = this.state.entity;
       let mergedEntity;
 
-      //TODO : open this -- to skip grounding
+      //TODO : open this -- not to skip grounding
 
-      // we can assume that all the other elements in the list are unique
+      //we can assume that all the other elements in the list are unique as we replace them immediately
       for(let i = 0; i < this.state.document.entities().length; i++) {
         let el = this.state.document.entities()[i];
         if (el.id() !== entity.id() && el.completed()) {
@@ -60,7 +60,7 @@ class EntityForm extends DirtyComponent {
       }
 
 
-//     //todo: remove this
+//     //todo: opent this to skip grounding
 //       for(let i = 0; i < this.state.document.entities().length; i++) {
 //         let el = this.state.document.entities()[i];
 //         if (el.id() !== entity.id() && entity.name().length > 0 && el.name() == entity.name()) {
@@ -71,7 +71,7 @@ class EntityForm extends DirtyComponent {
 //             break;
 //           }
 //         }
-
+//
 
 
         // //find the entity index
@@ -82,7 +82,10 @@ class EntityForm extends DirtyComponent {
         let updateParticipants = ((intn) => {
           if( intn.has( entity )) {
 
+
+            mergedEntity.description[intn.id()] = entity.description[intn.id()];
             intn.addParticipant(mergedEntity);
+            // intn.replaceParticipant(entity, mergedEntity);
 
 
             // let entInd = intn.participants().indexOf(entity);
@@ -103,7 +106,7 @@ class EntityForm extends DirtyComponent {
             // }
             //
 
-            intn.setParticipantType(mergedEntity, intn.getParticipantType(entity));
+            // intn.setParticipantType(mergedEntity, intn.getParticipantType(entity));
           }
           else
             return Promise.resolve();

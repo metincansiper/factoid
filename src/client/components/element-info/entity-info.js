@@ -102,6 +102,9 @@ class EntityInfo extends React.Component {
       }
     }, 50 );
 
+
+
+
     this.data = {
       element: el,
       name: el.name(),
@@ -135,6 +138,7 @@ class EntityInfo extends React.Component {
   focusNameInput(){
     this.debouncedFocusNameInput();
   }
+
 
   componentDidMount(){
     let root = ReactDom.findDOMNode( this );

@@ -114,6 +114,7 @@ class Interaction extends Element {
     return this.remove( ele, opts );
   }
 
+
   getParticipantType( ele ){
     return getPptTypeByVal( this.elementSet.group( ele ) );
   }
