@@ -36,7 +36,8 @@ class BiochemicalReactionForm extends InteractionForm{
     });
 
     intn.elements().map(el => {
-      if(el.description()==='output')
+      // if(el.description()==='output')
+      if(el[intn.id()] === 2)
         intn.setParticipantType(el, 'positive');
     });
 
