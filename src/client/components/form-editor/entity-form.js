@@ -82,8 +82,9 @@ class EntityForm extends DirtyComponent {
         let updateParticipants = ((intn) => {
           if( intn.has( entity )) {
 
-
-            mergedEntity.description[intn.id()] = entity.description[intn.id()];
+            let desc = mergedEntity.description();
+            desc[intn.id()] = entity.description()[intn.id()];
+            mergedEntity.redescribe(desc);
             intn.addParticipant(mergedEntity);
             // intn.replaceParticipant(entity, mergedEntity);
 

@@ -20,7 +20,7 @@ class InteractionForm extends Component {
   getEntityForParticipantIndex(ind){
     const intId = this.state.interaction.id();
 
-    return this.state.interaction.elements().filter(el => el.description[intId] === ind)[0];
+    return this.state.interaction.participants().filter(el =>  el.description()[intId] === ind)[0];
   }
 
   addEntityRow(data){

@@ -155,6 +155,7 @@ class Element {
     return updatePromise;
   }
 
+
   description( descr ){
     if( descr !== undefined ){
       return this.redescribe( descr );
