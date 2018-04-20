@@ -178,7 +178,7 @@ class FormEditor extends DirtyComponent {
 
     let doc = this.state.document;
     doc.interactions().map(interaction=>{
-      console.log(interaction.description());
+      console.log(interaction);
       interaction.elements().map(el => {
         console.log(el.name());
         console.log(el);
@@ -196,11 +196,11 @@ class FormEditor extends DirtyComponent {
 
     const forms = [
       {type: 'Protein Modification' , clazz: ProteinModificationForm,entityCnt: 2, description:"One protein chemically modifies another protein.", defaultDescription: "activates-phosphorylation"},
-      {type:'Complex Association', clazz: ComplexInteractionForm, entityCnt: 1, description: "Multiple proteins come together to form a complex molecule.", defaultDescription: "form a complex"},
-      {type:'Complex Dissociation', clazz: ComplexInteractionForm, entityCnt: 1, description: "A complex molecule's members get separated.", defaultDescription: "dissociate from a complex"},
+      {type:'Complex Association', clazz: ComplexInteractionForm, entityCnt: 2, description: "Multiple proteins come together to form a complex molecule.", defaultDescription: "form a complex"},
+      {type:'Complex Dissociation', clazz: ComplexInteractionForm, entityCnt: 2, description: "A complex molecule's members get separated.", defaultDescription: "dissociate from a complex"},
       {type:'Location Change', clazz: LocationChangeForm, entityCnt:4, description: "One protein activates or inhibits cellular location change in another protein.", defaultDescription: "activates location change"},
       {type:'Biochemical Reaction', clazz: BiochemicalReactionForm, entityCnt: 3, description: "One or more small molecules turn into other small molecules by the action of an enzyme.", defaultDescription: "catalyzes"},
-      {type:'Physical Interaction', clazz: PhysicalInteractionForm, entityCnt: 1, description: "Two or more proteins physically interact as members in a complex.", defaultDescription: "physically interact"},
+      {type:'Physical Interaction', clazz: PhysicalInteractionForm, entityCnt: 2, description: "Two or more proteins physically interact as members in a complex.", defaultDescription: "physically interact"},
       {type:'Activation Inhibition', clazz:ActivationInhibitionForm, entityCnt: 2, description: "A protein changes the activity status of another protein.", defaultDescription: "activates"},
       {type:'Expression Regulation', clazz: ExpressionRegulationForm, entityCnt: 2, description: "A protein changes mRNA expression of a gene.", defaultDescription: "activates expression"}
     ];
