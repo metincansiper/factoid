@@ -146,7 +146,6 @@ class ActionLogger extends DirtyComponent {
     });
 
     this.data.bus.on('tippyshow', e => {
-      console.log('here');
       this.setState({
         curTask: e.id(),
         tipOpen: true
