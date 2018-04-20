@@ -112,11 +112,8 @@ class FormEditor extends DirtyComponent {
   addInteractionRow(data){
     let self = this;
     let entArr = [];
-    const entityCnt = data.entityDescriptions.length;
 
-
-
-    for(let i = 0; i < entityCnt; i++)
+    for(let i = 0; i < data.entityCnt; i++)
         entArr.push(self.addElement({description: {}}));
 
     let intn = this.addInteraction(data);
@@ -126,31 +123,22 @@ class FormEditor extends DirtyComponent {
 
 
     Promise.all(entArr).then(responses => {
-      let resp = responses[entityCnt]; // this it the interaction
+      let resp = responses[data.entityCnt]; // this it the interaction
 
-
-
-      for(let i = 0; i < entityCnt; i++) {
-        // responses[i].description = {}; //create a new field for entities
+      for(let i = 0; i < data.entityCnt; i++) {
         //TODO: move this from description to its own field
         let desc = responses[i].description();
         desc[resp.id()] = i;
         responses[i].redescribe(desc);
-
-        console.log(responses[i]);
         resp.addParticipant(responses[i]);
       }
-
-      // this.state.document.synch(true);
-      // this.setState(this.state);
       this.dirty();
-
     });
-
   }
 
 
   deleteInteractionRow(data){
+
     let doc = this.state.document;
     let intn = data.interaction;
 
@@ -160,7 +148,19 @@ class FormEditor extends DirtyComponent {
 
     let promiseArr = [];
     for(let i = 0; i < elsLength; i++) {
-      promiseArr.push(Promise.try(() => intn.removeParticipant(els[i])).then(doc.remove(els[i])));
+      promiseArr.push(Promise.try(() => intn.removeParticipant(els[i]))
+        .then(()=>{
+          if(Object.keys(els[i].description()).length <= 1) // entity is in another interaction as well
+            doc.remove(els[i]);
+          else{
+          //  only remove this interaction's key from the description
+            let desc = els[i].description();
+            delete desc[intn.id()];
+            els[i].redescribe(desc);
+          }
+
+        }
+      ));
     }
 
     Promise.all(promiseArr).then( () => {
@@ -169,6 +169,8 @@ class FormEditor extends DirtyComponent {
     });
 
   }
+
+
 
   //TODO: This will test validity of entries first
   //Convert to biopax or show in the editor
@@ -193,14 +195,14 @@ class FormEditor extends DirtyComponent {
     this.state.dirty = false;
 
     const forms = [
-      {type: 'Protein Modification' , clazz: ProteinModificationForm,entityDescriptions:['input', 'output'], description:"One protein chemically modifies another protein.", defaultDescription: "activates-phosphorylation"},
-      {type:'Complex Association', clazz: ComplexInteractionForm, entityDescriptions: ['input'], description: "Multiple proteins come together to form a complex molecule.", defaultDescription: "form a complex"},
-      {type:'Complex Dissociation', clazz: ComplexInteractionForm, entityDescriptions: ['input'], description: "A complex molecule's members get separated.", defaultDescription: "dissociate from a complex"},
-      {type:'Location Change', clazz: LocationChangeForm, entityDescriptions: ['input','output', 'input', 'output'], description: "One protein activates or inhibits cellular location change in another protein.", defaultDescription: "activates location change"},
-      {type:'Biochemical Reaction', clazz: BiochemicalReactionForm, entityDescriptions: ['input','catalyzer', 'output'], description: "One or more small molecules turn into other small molecules by the action of an enzyme.", defaultDescription: "catalyzes"},
-      {type:'Physical Interaction', clazz: PhysicalInteractionForm, entityDescriptions: ['input'], description: "Two or more proteins physically interact as members in a complex.", defaultDescription: "physically interact"},
-      {type:'Activation Inhibition', clazz:ActivationInhibitionForm, entityDescriptions: ['input', 'output'], description: "A protein changes the activity status of another protein.", defaultDescription: "activates"},
-      {type:'Expression Regulation', clazz: ExpressionRegulationForm, entityDescriptions: ['input', 'output'], description: "A protein changes mRNA expression of a gene.", defaultDescription: "activates expression"}
+      {type: 'Protein Modification' , clazz: ProteinModificationForm,entityCnt: 2, description:"One protein chemically modifies another protein.", defaultDescription: "activates-phosphorylation"},
+      {type:'Complex Association', clazz: ComplexInteractionForm, entityCnt: 1, description: "Multiple proteins come together to form a complex molecule.", defaultDescription: "form a complex"},
+      {type:'Complex Dissociation', clazz: ComplexInteractionForm, entityCnt: 1, description: "A complex molecule's members get separated.", defaultDescription: "dissociate from a complex"},
+      {type:'Location Change', clazz: LocationChangeForm, entityCnt:4, description: "One protein activates or inhibits cellular location change in another protein.", defaultDescription: "activates location change"},
+      {type:'Biochemical Reaction', clazz: BiochemicalReactionForm, entityCnt: 3, description: "One or more small molecules turn into other small molecules by the action of an enzyme.", defaultDescription: "catalyzes"},
+      {type:'Physical Interaction', clazz: PhysicalInteractionForm, entityCnt: 1, description: "Two or more proteins physically interact as members in a complex.", defaultDescription: "physically interact"},
+      {type:'Activation Inhibition', clazz:ActivationInhibitionForm, entityCnt: 2, description: "A protein changes the activity status of another protein.", defaultDescription: "activates"},
+      {type:'Expression Regulation', clazz: ExpressionRegulationForm, entityCnt: 2, description: "A protein changes mRNA expression of a gene.", defaultDescription: "activates expression"}
     ];
 
     let hArr = [];
@@ -210,7 +212,11 @@ class FormEditor extends DirtyComponent {
 
       let formContent = doc.interactions().map(interaction => {
         if(interaction.name() === form.type)
-          return h('div', [h('button.delete-interaction', { onClick: e => {self.deleteInteractionRow({interaction:interaction}); } }, 'X'), h(form.clazz, {key: interaction.id(), document:doc, interaction:interaction, description: form.type})] );
+          return h('div.form-interaction-line',
+            [
+              h(form.clazz, {key: interaction.id(), document:doc, interaction:interaction, description: form.type}),
+              h('button.delete-interaction', { onClick: e => {self.deleteInteractionRow({interaction:interaction}); } }, 'X')
+            ] );
           else return null;
       });
 
@@ -221,7 +227,7 @@ class FormEditor extends DirtyComponent {
         h('p', form.description),
         ...formContent,
         h('div.form-action-buttons', [
-          h('button.form-interaction-adder', { onClick: e => self.addInteractionRow({name:form.type, entityDescriptions:form.entityDescriptions,  description: form.defaultDescription})}, [
+          h('button.form-interaction-adder', { onClick: e => self.addInteractionRow({name:form.type, entityCnt:form.entityCnt,  description: form.defaultDescription})}, [
             h('i.material-icons.add-new-interaction-icon', 'add'),
             'ADD INTERACTION'
           ])])

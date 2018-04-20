@@ -7,9 +7,15 @@
 
 .form-interaction {
   padding-bottom: 10px;
-  display: flex;
-  /*justify-content: space-between;*/
+  display: inline-flex;
+  padding-right: 10px;
 }
+
+.form-interaction-line{
+  display: flex;
+/**/
+}
+
 
 .form-action-buttons {
   display: flex;
@@ -72,7 +78,7 @@
 .form-entity {
   padding-left: 0.5em;
   padding-right: 0.5em;
-  width: 11em;
+  width: 8em;
   height: 1.5em;
   margin: 0.5em;
 
@@ -129,4 +135,5 @@
   font-family: Arial;
   /*font-size: 0.9em;*/
 }
+
 

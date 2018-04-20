@@ -87,27 +87,6 @@ class EntityForm extends DirtyComponent {
             mergedEntity.redescribe(desc);
             intn.addParticipant(mergedEntity);
             // intn.replaceParticipant(entity, mergedEntity);
-
-
-            // let entInd = intn.participants().indexOf(entity);
-            //
-            // console.log(entInd);
-            //
-            // //to shift others
-            // let restParticipants = _.clone(intn.participants());
-            // for(let i = entInd; i < intn.participants().length; i++){
-            //   intn.removeParticipant(intn.participants()[i]);
-            // }
-            // intn.addParticipant(mergedEntity);
-            //
-            // console.log(restParticipants.length);
-            // //add others back
-            // for(let i = entInd + 1; i < restParticipants.length; i++){
-            //   intn.addParticipant(restParticipants[i]);
-            // }
-            //
-
-            // intn.setParticipantType(mergedEntity, intn.getParticipantType(entity));
           }
           else
             return Promise.resolve();
@@ -156,6 +135,7 @@ class EntityForm extends DirtyComponent {
     if(this.state.showEntityInfo){
       hFunc = h(Popover, {
         tippy: {
+          placement: 'top',
           hideOnClick: false,
           html: h(ElementInfo, {key:this.state.entity.name(), element: this.state.entity, document: this.state.document})
         }}, [hFunc]);
