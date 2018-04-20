@@ -142,7 +142,10 @@ class ActionLogger extends DirtyComponent {
 
 
     this.data.bus.on('hidetip', e => {
-      this.setState({tipOpen: false});
+      this.setState({
+        tipOpen: false,
+        curTask: null
+      });
     });
 
     this.data.bus.on('tippyshow', e => {
@@ -183,7 +186,10 @@ class ActionLogger extends DirtyComponent {
       const stopTaskButton = h('button.stop-task', {
         onClick: e => {
           this.data.bus.emit('closetip', ent);
-          this.setState({tipOpen: false});
+          this.setState({
+            tipOpen: false,
+            curTask: null
+          });
         } }, [
           'Stop Task'
       ]);
@@ -191,7 +197,15 @@ class ActionLogger extends DirtyComponent {
       const b = this.state.tipOpen ? stopTaskButton : startTaskButton;
 
 
-      return h('li', [
+      return h('li', {
+        className: this.state.curTask === ent.id() ? 'todo-active' : 'todo',
+        onMouseEnter: e => {
+          this.data.bus.emit('highlightnode', ent.id(), { 'border-width': 4, 'border-color': 'red' } );
+        },
+        onMouseLeave: e => {
+          this.data.bus.emit('highlightnode', ent.id(), { 'border-width': 0});
+        }
+      }, [
         `ground ${ent.name() ? ent.name() : 'unnamed entity'} `,
         this.state.curTask === ent.id() ? b : startTaskButton
       ]);

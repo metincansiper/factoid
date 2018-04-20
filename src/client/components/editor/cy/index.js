@@ -8,6 +8,7 @@ let addCxtMenu = require('./cxtmenu');
 let addTippy = require('./tippy');
 let addAutomove = require('./automove');
 let handleDoc = require('./doc');
+let stateStyle = require('./state-style');
 let debug = require('../../../debug');
 let defs = require('./defs');
 
@@ -32,6 +33,7 @@ function makeCytoscape( opts ){
   let handleOpts = _.assign( { cy }, opts );
 
   [
+    stateStyle,
     handleLayout,
     handleViewport,
     addEdgehandles,
