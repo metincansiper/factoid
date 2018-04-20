@@ -12,6 +12,7 @@ const Notification = require('../../notification/notification');
 
 module.exports = function({ bus, cy, document }){
   let hideAllTippies = () => {
+    bus.emit('hidetip');
     cy.nodes().forEach( hideTippy );
   };
 
@@ -350,6 +351,7 @@ module.exports = function({ bus, cy, document }){
           });
         } );
       } else {
+        bus.emit('tippyshow', node);
         makeTippy({
           el: node,
           ref: getRef( () => node.renderedBoundingBox({ includeLabels: true, includeOverlays: false }), node ),
