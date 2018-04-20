@@ -19,7 +19,8 @@ class ActionLogger extends DirtyComponent {
     this.state = {
       history: [],
       todos: [],
-      open: true
+      open: true,
+      curTask: null
     };
   }
 
@@ -138,6 +139,21 @@ class ActionLogger extends DirtyComponent {
         return `ground ${ent.name() ? ent.name() : 'unnamed entity'}`;
       }))
     });
+
+
+    this.data.bus.on('hidetip', e => {
+      this.setState({
+        tipOpen: false,
+        curTask: null
+      });
+    });
+
+    this.data.bus.on('tippyshow', e => {
+      this.setState({
+        curTask: e.id(),
+        tipOpen: true
+      });
+    });
   }
 
   componentWillUnmount(){
@@ -155,8 +171,44 @@ class ActionLogger extends DirtyComponent {
       return h('li', entry);
     });
 
-    const todos = this.data.document.entities().filter(ent => !ent.associated()).map(ent => {
-      return h('li', `ground ${ent.name() ? ent.name() : 'unnamed entity'}`);
+    const ungroundedEntities = this.data.document.entities().filter(ent => !ent.associated());
+
+    const todos = ungroundedEntities.map(ent => {
+
+      const startTaskButton = h('button.start-task', {
+        onClick: e => {
+          this.data.bus.emit('opentip', ent);
+          this.setState({tipOpen: true});
+        } }, [
+          'Start Task'
+      ]);
+
+      const stopTaskButton = h('button.stop-task', {
+        onClick: e => {
+          this.data.bus.emit('closetip', ent);
+          this.setState({
+            tipOpen: false,
+            curTask: null
+          });
+        } }, [
+          'Stop Task'
+      ]);
+
+      const b = this.state.tipOpen ? stopTaskButton : startTaskButton;
+
+
+      return h('li', {
+        className: this.state.curTask === ent.id() ? 'todo-active' : 'todo',
+        onMouseEnter: e => {
+          this.data.bus.emit('highlightnode', ent.id(), { 'border-width': 4, 'border-color': 'red' } );
+        },
+        onMouseLeave: e => {
+          this.data.bus.emit('highlightnode', ent.id(), { 'border-width': 0});
+        }
+      }, [
+        `ground ${ent.name() ? ent.name() : 'unnamed entity'} `,
+        this.state.curTask === ent.id() ? b : startTaskButton
+      ]);
     });
 
     let content;

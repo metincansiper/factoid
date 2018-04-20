@@ -34,3 +34,18 @@
   display: flex;
   justify-content: flex-start;
 }
+
+.start-task {
+  background-color: #00A84C;
+  color: #EEEEEE;
+}
+
+.stop-task {
+  background-color: #ED4A31;
+  color: #EEEEEE;
+}
+
+.todo-active {
+  background-color: #767676;
+  color: #EEEEEE;
+}
