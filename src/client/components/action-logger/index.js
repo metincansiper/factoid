@@ -171,9 +171,9 @@ class ActionLogger extends DirtyComponent {
       return h('li', entry);
     });
 
-    const ungroundedEntities = this.data.document.entities().filter(ent => !ent.associated());
+    const uncompleteEntities = this.data.document.entities().filter(ent => !ent.completed());
 
-    const todos = ungroundedEntities.map(ent => {
+    const todos = uncompleteEntities.map(ent => {
 
       const startTaskButton = h('button.start-task', {
         onClick: e => {
