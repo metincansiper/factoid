@@ -77,7 +77,7 @@ class AppBar extends Component {
           h('input.doc-name', {
             type: 'text',
             placeholder: 'Untitled document',
-            value:  this.state.docName,
+            value:  this.state.docName || p.document.name(),
             onChange: e => this.updateDocName(e.target.value)
           })
         ])
