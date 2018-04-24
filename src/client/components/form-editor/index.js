@@ -2,6 +2,7 @@ const DirtyComponent = require('../dirty-component');
 const h = require('react-hyperscript');
 const io = require('socket.io-client');
 const _ = require('lodash');
+const EventEmitter = require('eventemitter3');
 
 const logger = require('../../logger');
 const debug = require('../../debug');
@@ -10,6 +11,7 @@ const Document = require('../../../model/document');
 
 const DocumentWizardStepper = require('../document-wizard-stepper');
 const AppBar = require('../app-bar');
+const ActionLogger = require('../action-logger');
 
 
 const ProteinModificationForm = require('./protein-modification-form');
@@ -43,8 +45,11 @@ class FormEditor extends DirtyComponent {
       data: { id, secret }
     });
 
+    let bus = new EventEmitter();
+
     this.data = this.state = {
-      document: doc
+      document: doc,
+      bus: bus
     };
 
 
@@ -238,7 +243,8 @@ class FormEditor extends DirtyComponent {
     });
 
     return h('div.form-editor', [
-      h(AppBar, { document: this.data.document }),
+      h(AppBar, { document: this.data.document, bus: this.data.bus }),
+      h(ActionLogger, { document: this.data.document, bus: this.data.bus }),
       h('div.page-content', [
         h('h1.form-editor-title', 'Insert Pathway Information As Text'),
         h('div.form-templates', [
