@@ -9,6 +9,7 @@ const debug = require('../../debug');
 const Document = require('../../../model/document');
 
 const DocumentWizardStepper = require('../document-wizard-stepper');
+const AppBar = require('../app-bar');
 
 
 const ProteinModificationForm = require('./protein-modification-form');
@@ -222,7 +223,7 @@ class FormEditor extends DirtyComponent {
 
 
       //update form
-      let hFunc = h('div', [
+      let hFunc = h('div.form-template-entry', [
         h('h2', form.type),
         h('p', form.description),
         ...formContent,
@@ -236,14 +237,17 @@ class FormEditor extends DirtyComponent {
       hArr.push(hFunc);
     });
 
-    return h('div.document-form.page-content', [
-      h('h1.form-editor-title', 'Insert Pathway Information As Text'),
-        ...hArr,
-
-      h('button.form-submit', { onClick: e => this.submit() }, [
-        'SUBMIT'
+    return h('div.form-editor', [
+      h(AppBar, { document: this.data.document }),
+      h('div.page-content', [
+        h('h1.form-editor-title', 'Insert Pathway Information As Text'),
+        h('div.form-templates', [
+          ...hArr
+        ]),
+        h('button.form-submit', { onClick: e => this.submit() }, [
+          'SUBMIT'
+        ])
       ]),
-
       h(DocumentWizardStepper, {
         backEnabled: false,
         // TODO
