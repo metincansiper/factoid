@@ -3,37 +3,47 @@ let InteractionForm = require('./interaction-form.js');
 let EntityForm = require('./entity-form.js');
 
 
-class ComplexInteractionForm extends InteractionForm {
+class MolecularInteractionForm extends InteractionForm {
 
   getNextEntityInd(){
     return this.state.interaction.elements().length;
   }
-  render(){
 
+  render(){
     const intn = this.state.interaction;
     let intnId = intn.id();
 
+    let intVal = intn.description();
+
     let hFunc = intn.elements().map(el =>{
-      return h('div', [h(EntityForm, {entity:el, placeholder:'Protein', tooltipContent:'Name or ID', style: 'form-entity-small', document: this.state.document})
+      return h('div', [h(EntityForm, {entity:el, placeholder:'Molecule', tooltipContent:'Name or ID', style: 'form-entity-small', document: this.state.document})
       ]);
     });
 
-
-    if(intn.description().indexOf("form") > -1)  // associate complex
-      intn.elements().map(el=>intn.setParticipantType(el, "positive"));
-    else  // dissociate complex
-      intn.elements().map(el=>intn.setParticipantType(el, "negative"));
-
     return h('div.form-interaction', [
-        ...hFunc,
+
+      ...hFunc,
+
       h('div.form-action-buttons', [
         h('button.form-entity-adder', { onClick: () => {
-          let desc = {};
-          desc[intnId] = this.getNextEntityInd();
-          this.addEntityRow({description:desc});}},
+              let desc = {};
+              desc[intnId] = this.getNextEntityInd();
+              this.addEntityRow({description:desc});}},
           [ h('i.material-icons.add-new-entity-icon', 'add'), ''])
       ]),
+      h('span', [
+        h('select.form-options', {id:('interaction-'+ intn.id()), value: intVal,
+          onChange: e => {
+            this.updateInteractionType(e.target.value);
+          }}, [
+          h('option', { value: 'physical interaction'}, 'physically interact'),
+          h('option', { value: 'complex association'}, 'form a complex'),
+          h('option', { value: 'complex dissociation'}, 'dissociate from a complex'),
+        ])
+      ]),
+
     ]);
   }
+
 }
-module.exports = ComplexInteractionForm;
+module.exports = MolecularInteractionForm;
