@@ -53,12 +53,10 @@
   flex-direction: row;
 }
 
-
 .delete-interaction {
   border: none;
   color: #ED4A31;
 }
-
 
 .form-submit {
   color: #EEEEEE;
@@ -69,7 +67,6 @@
   padding: 0 20px;
   display: flex;
   flex-direction: row;
-
 }
 
 .add-new-interaction-icon {
@@ -109,6 +106,7 @@
   margin: 0.5em;
 
 }
+
 .form-multiple-entity {
   padding: 0.5em;
   height: 5em;
@@ -136,12 +134,10 @@
 
 }
 
-
 .form-entity::placeholder, .form-entity-small::placeholder, .form-entity-medium::placeholder{
   font-style: italic;
   font-weight: lighter;
   font-family: Arial;
   /*font-size: 0.9em;*/
 }
-
 

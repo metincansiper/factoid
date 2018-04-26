@@ -15,11 +15,8 @@ const ActionLogger = require('../action-logger');
 
 
 const ProteinModificationForm = require('./protein-modification-form');
-// const ComplexInteractionForm = require('./complex-interaction-form');
 const ExpressionRegulationForm = require('./expression-regulation-form');
-// const BiochemicalReactionForm = require('./biochemical-reaction-form');
 const LocationChangeForm = require('./location-change-form');
-// const PhysicalInteractionForm = require('./physical-interaction-form');
 const MolecularInteractionForm = require('./molecular-interaction-form');
 const ActivationInhibitionForm = require('./activation-inhibition-form');
 
@@ -203,11 +200,7 @@ class FormEditor extends DirtyComponent {
 
     const forms = [
       {type: 'Protein Modification' , clazz: ProteinModificationForm,entityCnt: 2, description:"One protein chemically modifies another protein.", defaultDescription: "activates-phosphorylation"},
-      // {type:'Complex Association', clazz: ComplexInteractionForm, entityCnt: 2, description: "Multiple proteins come together to form a complex molecule.", defaultDescription: "form a complex"},
-      // {type:'Complex Dissociation', clazz: ComplexInteractionForm, entityCnt: 2, description: "A complex molecule's members get separated.", defaultDescription: "dissociate from a complex"},
-      {type:'Location Change', clazz: LocationChangeForm, entityCnt:4, description: "One protein activates or inhibits cellular location change in another protein.", defaultDescription: "activates location change"},
-      // {type:'Biochemical Reaction', clazz: BiochemicalReactionForm, entityCnt: 3, description: "One or more small molecules turn into other small molecules by the action of an enzyme.", defaultDescription: "catalyzes"},
-      // {type:'Physical Interaction', clazz: PhysicalInteractionForm, entityCnt: 2, description: "Two or more proteins physically interact as members in a complex.", defaultDescription: "physically interact"},
+      {type:'Location Change', clazz: LocationChangeForm, entityCnt:2, description: "One protein activates or inhibits cellular location change in another protein.", defaultDescription: "activates translocation from"},
       {type:'Molecular Interaction', clazz: MolecularInteractionForm, entityCnt: 2, description: "Two or more proteins physically interact.", defaultDescription: "physically interact"},
       {type:'Activation Inhibition', clazz:ActivationInhibitionForm, entityCnt: 2, description: "A protein changes the activity status of another protein.", defaultDescription: "activates"},
       {type:'Expression Regulation', clazz: ExpressionRegulationForm, entityCnt: 2, description: "A protein changes mRNA expression of a gene.", defaultDescription: "activates expression"}
