@@ -61,6 +61,12 @@ class LocationChangeForm extends InteractionForm {
     const newLocationInd = 5;
 
 
+    if(intn.description().indexOf("activate") > - 1)
+      intn.setParticipantType(rEnt, 'positive');
+    else
+      intn.setParticipantType(rEnt, 'negative');
+
+
     return h('div.form-interaction', [
       h(EntityForm, { entity: lEnt , placeholder: 'Controller protein', tooltipContent:'Name or ID', style: 'form-entity-medium', document: this.state.document}),
       h('span', [
