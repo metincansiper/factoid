@@ -171,7 +171,7 @@ class ActionLogger extends DirtyComponent {
       return h('li', entry);
     });
 
-    const uncompleteEntities = this.data.document.entities().filter(ent => !ent.completed());
+    const uncompleteEntities = this.data.document.entities().filter(ent => !ent.completed()).slice(0, 3);
 
     const todos = uncompleteEntities.map(ent => {
 
