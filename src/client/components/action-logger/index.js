@@ -225,9 +225,17 @@ class ActionLogger extends DirtyComponent {
         h('div.action-logger-title', 'GUIDE'),
         h('div.action-section', [
           h('ul', [
-            h('li', 'click + to create a new entity'),
-            h('li', 'click -> to create an interaction between two entities'),
-            h('li', 'WIP (click the submit button to finish editing your Factoid)'),
+            h('li', [
+              h('span', 'click '),
+              h('i.material-icons', 'add_circle'),
+              h('span', ' to create a new entity')
+            ]),
+            h('li', [
+              h('span', 'click '),
+              h('i.material-icons', 'arrow_forward'),
+              h('span', ' to create an interaction between two entities ')
+            ]),
+            h('li', 'Click the submit button to finish editing your Factoid'),
           ])
         ])
       ]);
