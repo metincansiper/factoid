@@ -249,10 +249,7 @@ class FormEditor extends DirtyComponent {
           'SUBMIT'
         ])
       ]),
-      h(DocumentWizardStepper, {
-        backEnabled: false,
-        // TODO
-      })
+
     ]);
   }
 }
