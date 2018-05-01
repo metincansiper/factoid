@@ -1,7 +1,7 @@
-let { mixin } = require('../../util');
-let _ = require('lodash');
-let Syncher = require('../syncher');
-let EventEmitterMixin = require('../event-emitter-mixin');
+const { mixin } = require('../../util');
+const _ = require('lodash');
+const Syncher = require('../syncher');
+const EventEmitterMixin = require('../event-emitter-mixin');
 
 const TYPE = 'element';
 
@@ -9,17 +9,13 @@ const DEFAULTS = Object.freeze({
   position: { x: 0, y: 0 },
   name: '',
   description: '',
-  type: TYPE
+  type: TYPE,
+  completed: false
 });
 
 const sanitizePosition = pos => _.pick( pos, _.keys( DEFAULTS.position ) );
 
-const TYPES = {
-  INTERACTION: 'interaction',
-  ELEMENT: 'element',
-  PROTEIN: 'protein',
-  CHEMICAL: 'chemical'
-};
+const { ELEMENT_TYPES, ELEMENT_TYPE } = require('./element-type');
 
 /**
 A generic biological element of no specific type
@@ -29,8 +25,11 @@ This allows for reading and writing on the DB and keeping the object synched
 with remote updates.
 */
 class Element {
-  static get TYPES(){ return TYPES; }
-  get TYPES(){ return TYPES; }
+  static get TYPES(){ return ELEMENT_TYPES; }
+  get TYPES(){ return ELEMENT_TYPES; }
+
+  static get TYPE(){ return ELEMENT_TYPE; }
+  get TYPE(){ return ELEMENT_TYPE; }
 
   constructor( opts = {} ){
     EventEmitterMixin.call( this ); // defines this.emitter
@@ -59,6 +58,11 @@ class Element {
       if( changes.description != null ){
         this.emit( 'redescribe', changes.description, old.description );
         this.emit( 'remoteredescribe', changes.description, old.description );
+      }
+
+      if( changes.completed != null ){
+        this.emit( 'complete', changes.completed, old.completed );
+        this.emit( 'remotecomplete', changes.completed, old.completed );
       }
     });
   }
@@ -164,16 +168,42 @@ class Element {
     }
   }
 
+  complete(){
+    let completed = this.completed();
 
+    if( !completed ){
+      let update = this.syncher.update({ completed: true });
+
+      this.emit('complete');
+      this.emit('localcomplete');
+
+      return update;
+    } else {
+      return Promise.resolve();
+    }
+  }
+
+  uncomplete(){
+    let completed = this.completed();
+
+    if( completed ){
+      let update = this.syncher.update({ completed: false });
+
+      this.emit('uncomplete');
+      this.emit('localuncomplete');
+
+      return update;
+    } else {
+      return Promise.resolve();
+    }
+  }
+
+  completed(){
+    return this.syncher.get('completed');
+  }
 
   json(){
-    return {
-      id: this.id(),
-      secret: this.secret(),
-      type: this.type(),
-      name: this.name(),
-      description: this.description()
-    };
+    return _.assign({}, _.pick( this.syncher.get(), ['id', 'secret'].concat( _.keys(DEFAULTS) ) ) );
   }
 }
 

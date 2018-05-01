@@ -1,4 +1,3 @@
-const Cytoscape = require('cytoscape');
 const http = require('express').Router();
 const Promise = require('bluebird');
 const _ = require('lodash');
@@ -7,7 +6,6 @@ const uuid = require('uuid');
 
 const Document = require('../../../../model/document');
 const db = require('../../../db');
-const { makeCyEles, getCyLayoutOpts } = require('../../../../util');
 const logger = require('../../../logger');
 
 const provider = require('./reach');
@@ -65,6 +63,8 @@ http.get('/my-factoids', (req, res) => {
   );
 });
 
+let getReachOutput = text => provider.getRawResponse( text );
+
 // get existing doc
 http.get('/:id', function( req, res ){
   let id = req.params.id;
@@ -99,6 +99,15 @@ http.post('/', function( req, res ){
       throw e;
     } )
   );
+});
+
+// TODO remove this route as reach should never need to be queried directly
+http.post('/query-reach', function( req, res ){
+  let text = req.body.text;
+
+  getReachOutput( text )
+  .then( reachRes => reachRes.json() )
+  .then( reachJson => res.json(reachJson) );
 });
 
 module.exports = http;

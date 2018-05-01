@@ -3,43 +3,11 @@ const _ = require('lodash');
 
 const TYPE = 'entity';
 
-const MODS = Object.freeze( (() => {
-  let mods = {};
-
-  let map = {
-    UNMODIFIED: 'unmodified',
-    PHOSPHORYLATED: 'phosphorylated',
-    METHYLATED: 'methylated',
-    UBIQUINATED: 'ubiquinated'
-  };
-
-  Object.keys( map ).forEach( key => {
-    let value = map[key];
-    let displayValue = value[0].toUpperCase() + value.substr(1);
-
-    mods[key] = Object.freeze({ value, displayValue });
-  } );
-
-  return mods;
-})() );
-
-const ORDERED_MODS = Object.freeze( [
-  MODS.UNMODIFIED,
-  MODS.PHOSPHORYLATED,
-  MODS.METHYLATED,
-  MODS.UBIQUINATED
-] );
-
-const getModByValue = function( value ){
-  let key = Object.keys( MODS ).filter( key => MODS[key].value === value );
-
-  return MODS[key] || MODS.UNMODIFIED;
-};
+const { MODS, ORDERED_MODS, getModByValue } = require('./entity-mods');
 
 const DEFAULTS = Object.freeze({
   type: TYPE,
-  modification: MODS.UNMODIFIED.value,
-  completed: false
+  modification: MODS.UNMODIFIED.value
 });
 
 /**
@@ -128,7 +96,7 @@ class Entity extends Element {
   }
 
   moddable(){
-    return this.type() === this.TYPES.PROTEIN;
+    return this.type() === this.TYPE.PROTEIN;
   }
 
   associate( def ){
@@ -170,8 +138,8 @@ class Entity extends Element {
       association: null,
       type: TYPE
     }).then( () => {
-      this.emit('unassociated');
-      this.emit('localunassociated');
+      this.emit('unassociated', oldDef);
+      this.emit('localunassociated', oldDef);
     } );
 
     this.emit('unassociate', oldDef);
@@ -180,42 +148,8 @@ class Entity extends Element {
     return update;
   }
 
-  complete(){
-    let completed = this.completed();
-
-    if( !completed ){
-      let update = this.syncher.update({ completed: true });
-
-      this.emit('complete');
-      this.emit('localcomplete');
-
-      return update;
-    } else {
-      return Promise.resolve();
-    }
-  }
-
-  uncomplete(){
-    let completed = this.completed();
-
-    if( completed ){
-      let update = this.syncher.update({ completed: false });
-
-      this.emit('uncomplete');
-      this.emit('localuncomplete');
-
-      return update;
-    } else {
-      return Promise.resolve();
-    }
-  }
-
-  completed(){
-    return this.syncher.get('completed');
-  }
-
   json(){
-    return super.json();
+    return _.assign( {}, super.json(), _.pick( this.syncher.get(), _.keys(DEFAULTS) ) );
   }
 }
 

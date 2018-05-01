@@ -18,8 +18,30 @@ textarea.interaction-info-description {
   overflow: scroll;
 }
 
-.interaction-info-description-label {
+.interaction-info-description-label,
+.interaction-info-assoc-label {
   display: block;
   font-weight: bold;
   font-size: var(--smallFontSize);
+
+  &:not(:first-child) {
+    margin-top: 0.75em;
+  }
+}
+
+.interaction-info-assoc-radio-label {
+  display: block;
+}
+
+.interaction-info-assoc-radioset-label {
+  font-size: var(--smallFontSize);
+  font-weight: bold;
+}
+
+.interaction-info-notification {
+  margin-bottom: 0.5em;
+}
+
+.interaction-info-summary {
+  font-weight: bold;
 }

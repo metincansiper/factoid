@@ -6,9 +6,10 @@ const fetch = require('node-fetch');
 const FormData = require('form-data');
 const Organism = require('../../../../model/organism');
 const uniprot = require('../element-association/uniprot');
-const pubchem = require('../element-association/pubchem');
-const chebi = require('../element-association/chebi');
-const stream = require('stream');
+
+// TODO re-enable once a more stable solution for pubchem xrefs is found
+// https://github.com/PathwayCommons/factoid/issues/228
+// const pubchem = require('../element-association/pubchem');
 
 const logger = require('../../../logger');
 
@@ -21,17 +22,21 @@ const APPLY_GROUND = true;
 const REMOVE_GROUND_FOR_OTHER_SPECIES = false;
 
 module.exports = {
-  get: function( text ){
+  // TODO remove this function as reach should never need to be exposed directly
+  getRawResponse: function( text ){
     let form = new FormData();
 
     form.append('file', text, {
       filename: 'myfile.txt'
     });
 
-    let makeRequest = () => fetch(REACH_URL, {
+    return fetch(REACH_URL, {
       method: 'POST',
       body: form
     });
+  },
+  get: function( text ){
+    let makeRequest = () => this.getRawResponse( text );
 
     let makeDocJson = res => {
       let elements = [];
@@ -62,7 +67,6 @@ module.exports = {
       let getArgId = arg => arg.arg;
       let groundIsSame = (g1, g2) => g1.namespace === g2.namespace && g1.id === g2.id;
       let elIsIntn = el => el.entries != null;
-      let getElement = id => elementsMap.get(id);
 
       let getSentenceText = id => {
         let f = getFrame(id);
@@ -113,7 +117,10 @@ module.exports = {
             case 'uniprot':
               return uniprot.get( q );
             case 'pubchem':
-              return pubchem.get( q );
+              return null;
+              // TODO re-enable once a more stable solution for pubchem xrefs is found
+              // https://github.com/PathwayCommons/factoid/issues/228
+              // return pubchem.get( q );
             default:
               return null;
             }
