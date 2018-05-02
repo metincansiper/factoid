@@ -15,7 +15,8 @@
 }
 
 .document-view-chooser-choice {
-  border: 1px solid #767676;
+  padding: 10px;
+  border: 2px solid #767676;
 }
 
 .document-view-chooser-choice:hover {
@@ -27,11 +28,15 @@
   width: 20em;
   background-image: url('./image/network-option-preview.png');
   background-size: cover;
+  margin-bottom: 10px;
+  border: 1px solid #767676;
 }
 
 .form-choice {
   background-image: url('./image/form-option-preview.png');
   background-size: cover;
+  border: 1px solid #767676;
+  margin-bottom: 10px;
   height: 20em;
   width: 20em;
 }
