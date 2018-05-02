@@ -1,10 +1,10 @@
 const InteractionType = require('./interaction-type');
 const { PARTICIPANT_TYPE } = require('../participant-type');
 
-const VALUE = 'expression';
-const DISPLAY_VALUE = 'Expression';
+const VALUE = 'molecularInteraction';
+const DISPLAY_VALUE = 'MolecularInteraction';
 
-class Expression extends InteractionType {
+class MolecularInteraction extends InteractionType {
   constructor( intn ){
     super( intn );
   }
@@ -28,22 +28,32 @@ class Expression extends InteractionType {
   allowedParticipantTypes(){
     const T = PARTICIPANT_TYPE;
 
-    return [T.POSITIVE, T.NEGATIVE];
+    return [T.UNSIGNED];
   }
 
   areParticipantsTyped(){
     return this.isSigned();
   }
 
+  setMolecularInteractionType(val){
+    this.molecularInteractionType = val;
+  }
+
+  getMolecularInteractionType(){
+    return this.molecularInteractionType;
+  }
+
   static isAllowedForInteraction( intn ){
     let ppts = intn.participants();
-    let isProtein = ent => ent.type() === 'protein';
+    let isProtein = ent => true || ent.type() === 'protein';
+    let isChemical = ent => ent.type() === 'chemical';
 
-    return ppts.length === 2 && ppts.every( isProtein );
+    return ppts.length >= 2 && ppts.some( isProtein ) && ppts.some( isChemical );
   }
 
   toString(){
-    return super.toString( (this.isInhibition() ? 'inhibits' : 'promotes') + ' the expression of' );
+
+    return super.toString( this.getMolecularInteractionType());
   }
 
   static get value(){ return VALUE; }
@@ -53,4 +63,4 @@ class Expression extends InteractionType {
   get displayValue(){ return DISPLAY_VALUE; }
 }
 
-module.exports = Expression;
+module.exports = MolecularInteraction;

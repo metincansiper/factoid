@@ -50,13 +50,14 @@ class InteractionType {
     ]);
   }
 
-  setPariticpantAsPositive( ppt ){
+  setParticipantAsPositive( ppt ){
     return this.setParticipantAs( ppt, PARTICIPANT_TYPE.POSITIVE );
   }
 
   setParticipantAsNegative( ppt ){
     return this.setParticipantAs( ppt, PARTICIPANT_TYPE.NEGATIVE );
   }
+
 
   getTarget(){
     let intn = this.interaction;
