@@ -61,16 +61,13 @@ class LocationChangeForm extends InteractionForm {
     const newLocationInd = 5;
 
 
-    if(intn.description().indexOf("activate") > - 1)
-      intn.setParticipantType(rEnt, 'positive');
-    else
-      intn.setParticipantType(rEnt, 'negative');
+    let actVal =  intn.association().isInhibition()? "inhibits" : "activates" ;
 
 
     return h('div.form-interaction', [
       h(EntityForm, { entity: lEnt , placeholder: 'Controller protein', tooltipContent:'Name or ID', style: 'form-entity-medium', document: this.state.document}),
       h('span', [
-          h('select.form-options-long', { value: intn.description(), onChange: e => this.updateInteractionType(e.target.value) }, [
+          h('select.form-options-long', { value: intn.association().toString(), onChange: e => this.updateActivationInhibition(e.target.value) }, [
               h('option', { value: 'activates translocation from ' + this.getLocation(oldLocationInd) + ' to ' + this.getLocation(newLocationInd) }, 'activates translocation'),
               h('option', { value: 'inhibits translocation from ' + this.getLocation(oldLocationInd) + ' to ' + this.getLocation(newLocationInd)  }, 'inhibits translocation'),
           ])

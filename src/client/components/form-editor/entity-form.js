@@ -2,7 +2,8 @@ const DirtyComponent = require('../dirty-component');
 const _ = require('lodash');
 const h = require('react-hyperscript');
 const Popover = require('../popover/popover');
-const Poppy = require('../popover/poppy');
+
+// const Poppy = require('../popover/poppy');
 const ElementInfo = require('../element-info/element-info');
 
 
@@ -15,6 +16,7 @@ class EntityForm extends DirtyComponent {
     }, props );
 
 
+    this.notification = new Notification({ active: true });
   }
 
   updateEntityName(newName) {
@@ -114,19 +116,21 @@ class EntityForm extends DirtyComponent {
   }
 
   shouldComponentUpdate(){
-    // console.log(nextProps);
-    // console.log(nextState);
 
-    // return nextProps !== nextState;
-
-    return true;
+     return true;
   }
   componentDidUpdate(){
+
     //always check this
     this.mergeWithOtherEntities();
     return true;
   }
 
+  updateCompleted(){
+    if(this.state.entity.completed())
+      this.forceUpdate();
+
+  }
   render(){
     let self = this;
     let hFunc;
@@ -148,8 +152,9 @@ class EntityForm extends DirtyComponent {
     ]);
 
 
-    hFunc = h(Poppy, {
-      parent: self,
+
+    hFunc = h(Popover, {
+      parent: this,
       tippy: {
         placement: 'top',
         hideOnClick: false,
@@ -165,9 +170,13 @@ class EntityForm extends DirtyComponent {
             //   hCompletedStatus = h('i.material-icons.entity-info-complete-icon', 'check_circle');
             //
             // }
+
+            self.updateCompleted();
+
           }
 
         },
+        // html: h(ElementInfo, {key:this.state.entity.name(), element: this.state.entity, document: this.state.document})
         html: h(ElementInfo, {key:this.state.entity.name(), element: this.state.entity, document: this.state.document})
       }}, [hFunc]);
 

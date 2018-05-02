@@ -10,38 +10,38 @@ class ProteinModificationForm extends InteractionForm {
     let intn = this.state.interaction;
     let rEnt = this.getEntityForParticipantIndex(1);
 
-    let actVal = intn.description().split('-')[0];
+    intn.association().setAsPromotionOf(rEnt);
 
-
-    if(actVal.indexOf("activate")> - 1)
-      intn.setParticipantType(rEnt, 'positive');
-    else
-      intn.setParticipantType(rEnt, 'negative');
+    intn.association().setModificationType("phosphorylation");
 
   }
 
-  render(){
 
+  updateModificationType(val){
+    let intn = this.state.interaction;
+    intn.association().setModificationType(val);
+
+    this.forceUpdate();
+  }
+
+  render(){
 
     let intn = this.state.interaction;
     let lEnt = this.getEntityForParticipantIndex(0);
     let rEnt = this.getEntityForParticipantIndex(1);
 
+    let actVal =  intn.association().isInhibition()? "inhibits" : "activates" ;
 
-    let actVal = intn.description().split('-')[0];
-    let modVal = intn.description().split('-')[1];
+    let modVal = intn.association().getModificationType();
 
-
-    //Treat two options(activation + modification) as one interaction type
     return h('div.form-interaction', [
       h(EntityForm, { entity: lEnt ,   placeholder:'Controller protein', tooltipContent:'Name or ID', document: this.state.document}),
       h('span', [
         h('select.form-options', {id:('activation-'+ intn.id()), value: actVal,
           onChange: e => {
-            let actStatus = e.target.value;
-            let e2 = document.getElementById('modification-'+ intn.id());
-            let modStatus = e2.options[e2.selectedIndex].value;
-            this.updateInteractionType(actStatus + '-' + modStatus);
+
+
+            this.updateActivationInhibition(e.target.value);
           }}, [
           h('option', { value: 'activates'}, 'activates'),
           h('option', { value: 'inhibits'}, 'inhibits'),
@@ -50,15 +50,8 @@ class ProteinModificationForm extends InteractionForm {
       h('span', [
         h('select.form-options', {id:('modification-'+ intn.id()), value: modVal,
           onChange: e => {
-            let modStatus = e.target.value;
-            let e2 = document.getElementById('activation-'+ intn.id());
-            let actStatus = e2.options[e2.selectedIndex].value;
-            this.updateInteractionType(actStatus + '-' + modStatus);
 
-            if(actStatus.indexOf("activate")> - 1)
-              intn.setParticipantType(rEnt, 'positive');
-            else
-              intn.setParticipantType(rEnt, 'negative');
+            this.updateModificationType(e.target.value);
 
           }}, [
           h('option', { value: 'phosphorylation' }, 'phosphorylation'),

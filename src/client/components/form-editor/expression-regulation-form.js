@@ -5,23 +5,26 @@ let EntityForm = require('./entity-form.js');
 
 class ExpressionRegulationForm extends InteractionForm {
 
+  componentDidMount(){
+    let intn = this.state.interaction;
+    let rEnt = this.getEntityForParticipantIndex(1);
+    intn.association().setAsPromotionOf(rEnt);
+  }
+
   render(){
     const intn = this.state.interaction;
     const lEnt = this.getEntityForParticipantIndex(0);
     const rEnt = this.getEntityForParticipantIndex(1);
 
-    if(intn.description().indexOf("activate") > - 1)
-      intn.setParticipantType(rEnt, 'positive');
-    else
-      intn.setParticipantType(rEnt, 'negative');
+    let actVal =  intn.association().isInhibition()? "inhibits" : "activates" ;
 
 
     return h('div.form-interaction', [
       h(EntityForm, { entity: lEnt , placeholder: 'Enter transcription factor', document: this.state.document}),
       h('span', [
-        h('select.form-options', { value: intn.description(), onChange: e => this.updateInteractionType(e.target.value) }, [
-            h('option', { value: 'activates expression' }, 'activates expression'),
-            h('option', { value: 'inhibits expression' }, 'inhibits expression'),
+        h('select.form-options', { value: actVal, onChange: e => this.updateActivationInhibition(e.target.value) }, [
+            h('option', { value: 'activates' }, 'activates expression'),
+            h('option', { value: 'inhibits' }, 'inhibits expression'),
         ])
       ]),
       h(EntityForm, { entity: rEnt, placeholder: 'Enter target protein' , document: this.state.document} ),
