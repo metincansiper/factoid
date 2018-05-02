@@ -5,6 +5,21 @@ let EntityForm = require('./entity-form.js');
 
 
 class ProteinModificationForm extends InteractionForm {
+
+  componentDidMount(){
+    let intn = this.state.interaction;
+    let rEnt = this.getEntityForParticipantIndex(1);
+
+    let actVal = intn.description().split('-')[0];
+
+
+    if(actVal.indexOf("activate")> - 1)
+      intn.setParticipantType(rEnt, 'positive');
+    else
+      intn.setParticipantType(rEnt, 'negative');
+
+  }
+
   render(){
 
 
@@ -13,16 +28,8 @@ class ProteinModificationForm extends InteractionForm {
     let rEnt = this.getEntityForParticipantIndex(1);
 
 
-
     let actVal = intn.description().split('-')[0];
     let modVal = intn.description().split('-')[1];
-
-    intn.description(actVal+ "-" + modVal);
-
-    if(actVal.indexOf("activate")> - 1)
-      intn.setParticipantType(rEnt, 'positive');
-    else
-      intn.setParticipantType(rEnt, 'negative');
 
 
     //Treat two options(activation + modification) as one interaction type
@@ -47,6 +54,12 @@ class ProteinModificationForm extends InteractionForm {
             let e2 = document.getElementById('activation-'+ intn.id());
             let actStatus = e2.options[e2.selectedIndex].value;
             this.updateInteractionType(actStatus + '-' + modStatus);
+
+            if(actStatus.indexOf("activate")> - 1)
+              intn.setParticipantType(rEnt, 'positive');
+            else
+              intn.setParticipantType(rEnt, 'negative');
+
           }}, [
           h('option', { value: 'phosphorylation' }, 'phosphorylation'),
           h('option', { value: 'methylation' }, 'methylation'),
