@@ -1,6 +1,6 @@
 const { Component } = require('react');
 const NotificationBase = require('./base');
-const Popover = require('../popover');
+const Popover = require('../popover/popover');
 const _ = require('lodash');
 const { tippyDefaults } = require('../../defs');
 const h = require('react-hyperscript');
