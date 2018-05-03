@@ -14,11 +14,7 @@ const INTERACTION_TYPE = Object.freeze({
   EXPRESSION: Expression,
   MODIFICATION: Modification,
   CHEMICAL_AFFECTS_PROTEIN: ChemicalAffectsProtein,
-  PROTEIN_AFFECTS_CHEMICAL: ProteinAffectsChemical,
-  TRANSLOCATION: Translocation,
-  ACTIVATION_INHIBITION: ActivationInhibition,
-  MOLECULAR_INTERACTION: MolecularInteraction,
-
+  PROTEIN_AFFECTS_CHEMICAL: ProteinAffectsChemical
 
 });
 

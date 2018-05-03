@@ -20,8 +20,6 @@ const LocationChangeForm = require('./location-change-form');
 const MolecularInteractionForm = require('./molecular-interaction-form');
 const ActivationInhibitionForm = require('./activation-inhibition-form');
 
-let Interaction = require('../../../model/element/interaction');
-// const { INTERACTION_TYPE, INTERACTION_TYPES, getIntnTypeByVal } = require('../../../model/element/interaction-type/enum');
 
 class FormEditor extends DirtyComponent {
   constructor(props){
@@ -107,29 +105,11 @@ class FormEditor extends DirtyComponent {
   }
 
   addInteraction( data ){
-
-    let doc = this.data.document;
-
-    let el = doc.factory().make({
-      data: _.assign( {
+    return this.addElement( _.assign({
         type: 'interaction',
-        name: data.name
-
-      }, data )
-    });
-
-    return ( Promise.try( () => el.synch() )
-        .then( () => el.create() )
-        .then( () => doc.add(el) )
-        .then( () => el.associate(data.association) )
-        .then( () => el )
-    );
-
-    // return this.addElement( _.assign({
-    //     type: 'interaction',
-    //     name: data.name,
-    //     // association: data.association
-    // }, data) );
+        name: data.name,
+        description: ''
+    }, data) );
   }
 
 
@@ -141,6 +121,7 @@ class FormEditor extends DirtyComponent {
         entArr.push(self.addElement({description: {}}));
 
     let intn = this.addInteraction(data);
+
 
     entArr.push(intn);
 
@@ -154,12 +135,7 @@ class FormEditor extends DirtyComponent {
         desc[resp.id()] = i;
         responses[i].redescribe(desc);
         resp.addParticipant(responses[i]);
-
-        // resp.associate(data.association);
-
       }
-
-
       this.dirty();
     });
   }
@@ -223,11 +199,11 @@ class FormEditor extends DirtyComponent {
     this.state.dirty = false;
 
     const forms = [
-      {type: 'Protein Modification' , clazz: ProteinModificationForm,entityCnt: 2, description:"One protein chemically modifies another protein.", association: Interaction.ASSOCIATION.MODIFICATION },// "activates-phosphorylation"},
-      {type:'Location Change', clazz: LocationChangeForm, entityCnt:2, description: "One protein activates or inhibits cellular location change in another protein.", association: Interaction.ASSOCIATION.TRANSLOCATION}, //"activates translocation from"},
-      {type:'Molecular Interaction', clazz: MolecularInteractionForm, entityCnt: 2, description: "Two or more proteins physically interact.", association: Interaction.ASSOCIATION.MOLECULAR_INTERACTION}, //"physically interact"},
-      {type:'Activation Inhibition', clazz:ActivationInhibitionForm, entityCnt: 2, description: "A protein changes the activity status of another protein.", association: Interaction.ASSOCIATION.ACTIVATION_INHIBITION}, //"activates"},
-      {type:'Expression Regulation', clazz: ExpressionRegulationForm, entityCnt: 2, description: "A protein changes mRNA expression of a gene.", association: Interaction.ASSOCIATION.EXPRESSION} //"activates expression",}
+      {type: 'Protein Modification' , clazz: ProteinModificationForm,entityCnt: 2, description:"One protein chemically modifies another protein.", defaultDescription: "activates-phosphorylation"},
+      {type:'Location Change', clazz: LocationChangeForm, entityCnt:2, description: "One protein activates or inhibits cellular location change in another protein.", defaultDescription: "activates translocation from"},
+      {type:'Molecular Interaction', clazz: MolecularInteractionForm, entityCnt: 2, description: "Two or more proteins physically interact.", defaultDescription: "physically interact"},
+      {type:'Activation Inhibition', clazz:ActivationInhibitionForm, entityCnt: 2, description: "A protein changes the activity status of another protein.", defaultDescription: "activates"},
+      {type:'Expression Regulation', clazz: ExpressionRegulationForm, entityCnt: 2, description: "A protein changes mRNA expression of a gene.", defaultDescription: "activates expression"}
     ];
 
     let hArr = [];
@@ -252,7 +228,7 @@ class FormEditor extends DirtyComponent {
         h('p', form.description),
         ...formContent,
         h('div.form-action-buttons', [
-          h('button.form-interaction-adder', { onClick: e => self.addInteractionRow({name:form.type, entityCnt:form.entityCnt, association: form.association})}, [
+          h('button.form-interaction-adder', { onClick: e => self.addInteractionRow({name:form.type, entityCnt:form.entityCnt,  description: form.defaultDescription})}, [
             h('i.material-icons.add-new-interaction-icon', 'add'),
             'ADD INTERACTION'
           ])])
