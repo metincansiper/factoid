@@ -5,11 +5,6 @@ let EntityForm = require('./entity-form.js');
 
 class ExpressionRegulationForm extends InteractionForm {
 
-  componentDidMount(){
-    let intn = this.state.interaction;
-    let rEnt = this.getEntityForParticipantIndex(1);
-    intn.association().setAsPromotionOf(rEnt);
-  }
 
   render(){
     const intn = this.state.interaction;

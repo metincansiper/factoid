@@ -6,15 +6,15 @@ let EntityForm = require('./entity-form.js');
 
 class ProteinModificationForm extends InteractionForm {
 
-  componentDidMount(){
-    let intn = this.state.interaction;
-    let rEnt = this.getEntityForParticipantIndex(1);
-
-    intn.association().setAsPromotionOf(rEnt);
-
-    intn.association().setModificationType("phosphorylation");
-
-  }
+  // componentDidMount(){
+  //   let intn = this.state.interaction;
+  //   let rEnt = this.getEntityForParticipantIndex(1);
+  //
+  //   intn.association().setAsPromotionOf(rEnt);
+  //
+  //   intn.association().setModificationType("phosphorylation");
+  //
+  // }
 
 
   updateModificationType(val){
@@ -32,7 +32,8 @@ class ProteinModificationForm extends InteractionForm {
 
     let actVal =  intn.association().isInhibition()? "inhibits" : "activates" ;
 
-    let modVal = intn.association().getModificationType();
+    let modVal = intn.association().getModificationType() == 'undefined' ? "phosphorylation" : intn.association().getModificationType();
+
 
     return h('div.form-interaction', [
       h(EntityForm, { entity: lEnt ,   placeholder:'Controller protein', tooltipContent:'Name or ID', document: this.state.document}),

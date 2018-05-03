@@ -48,12 +48,22 @@ class InteractionForm extends Component {
     let intn = this.state.interaction;
     let rEnt = this.getEntityForParticipantIndex(1);
 
-    if(val.indexOf("activ") > -1)
-      intn.association().setAsPromotionOf(rEnt);
-    else
-      intn.association().setAsInhibitionOf(rEnt);
+    // Promise.try( () => {
+      if (val.indexOf("activ") > -1) {
+        intn.setParticipantType(rEnt, 'positive');
+        // intn.association().setAsPromotionOf(rEnt);
 
-    this.forceUpdate();
+      }
+      else {
+        intn.setParticipantType(rEnt, 'negative');
+        // intn.association().setAsInhibitionOf(rEnt);
+      }
+
+      // setTimeout(()=> {
+          this.forceUpdate();
+        // }, 1000);
+    // })
+    // .then(() => this.forceUpdate());
 
   }
 }

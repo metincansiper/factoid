@@ -111,9 +111,6 @@ class EntityForm extends DirtyComponent {
     }
   }
 
-  componentDidMount(){
-    this.state.entity.name('');
-  }
 
   shouldComponentUpdate(){
 
@@ -164,15 +161,12 @@ class EntityForm extends DirtyComponent {
           if(event.type === 'click' && self.state.entity.name().length > 0) {
             show();
             //update completed status and show
-
             // self.state.isComplete = self.state.entity.completed();
             // if(this.state.isComplete) {
             //   hCompletedStatus = h('i.material-icons.entity-info-complete-icon', 'check_circle');
             //
             // }
-
             self.updateCompleted();
-
           }
 
         },
