@@ -46,14 +46,6 @@ class Modification extends InteractionType {
   }
 
 
-  setModificationType(type) {
-    this.modificationType = type;
-  }
-
-  getModificationType(){
-    return this.modificationType;
-  }
-
   toString(){
     let tgt = this.getTarget();
     let verb = (this.isInhibition() ? 'inhibits' : 'promotes');

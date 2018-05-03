@@ -6,7 +6,10 @@ const InteractionInfo = require('./interaction-info');
 class ElementInfo extends React.Component {
   constructor( props ){
     super( props );
+
+
   }
+
 
   render(){
     let p = Object.assign( {

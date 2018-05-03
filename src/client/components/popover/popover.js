@@ -17,6 +17,7 @@ class Popover extends React.Component {
     super( props );
 
     this.state = {};
+    this.state.html = props.tippy.html;
 
   }
 
