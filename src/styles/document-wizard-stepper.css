@@ -1,15 +1,15 @@
+.document-wizard-stepper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .document-wizard-stepper-back {
-  position: absolute;
-  left: 0;
-  bottom: 0;
   margin: 0.5em;
   font-size: 1.25em;
 }
 
 .document-wizard-stepper-forward {
-  position: absolute;
-  right: 0;
-  bottom: 0;
   margin: 0.5em;
   font-size: 1.25em;
 }
