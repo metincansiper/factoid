@@ -36,7 +36,6 @@ class Translocation extends InteractionType {
     return this.isSigned();
   }
 
-
   setOldLocation(val){
     this.oldLocation = val;
   }
