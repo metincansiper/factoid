@@ -2,7 +2,8 @@ const DirtyComponent = require('../dirty-component');
 const _ = require('lodash');
 const h = require('react-hyperscript');
 const Popover = require('../popover/popover');
-// const Popover = require('./popover');
+
+// const Poppy = require('../popover/poppy');
 const ElementInfo = require('../element-info/element-info');
 
 
@@ -11,14 +12,21 @@ class EntityForm extends DirtyComponent {
     super(props);
     this.state = this.data = _.assign( {
       style: 'form-entity',
-      showEntityInfo: false
+      showEntityInfo: false,
     }, props );
+
+
+    this.notification = new Notification({ active: true });
   }
 
   updateEntityName(newName) {
     this.state.entity.name(newName);
-    this.setState(this.state);
+    // this.setState(this.state);
+
+    if (this.state.entity.name().length > 0)
+      this.state.showEntityInfo = true;
     this.dirty();
+
   }
 
   updateGrounding(stateVal) {
@@ -103,16 +111,25 @@ class EntityForm extends DirtyComponent {
     }
   }
 
+
   shouldComponentUpdate(){
-    return true;
+
+     return true;
   }
   componentDidUpdate(){
+
+    //always check this
     this.mergeWithOtherEntities();
     return true;
   }
 
-  render(){
+  updateCompleted(){
+    if(this.state.entity.completed())
+      this.forceUpdate();
 
+  }
+  render(){
+    let self = this;
     let hFunc;
     let hCompletedStatus;
 
@@ -121,26 +138,41 @@ class EntityForm extends DirtyComponent {
     else
       hCompletedStatus = h('i.material-icons', 'help');
 
+
     hFunc = h('div.form-interaction', [
-        h('input[type="text"].' + this.state.style, {
-          value: this.state.entity && this.state.entity.name(),
-          placeholder: this.state.placeholder,
-          onChange: e => this.updateEntityName(e.target.value),
-          onClick: e => this.updateGrounding(true)
-        }),
-        hCompletedStatus
-      ]);
+      h('input[type="text"].' + this.state.style, {
+        value: this.state.entity && this.state.entity.name(),
+        placeholder: this.state.placeholder,
+        onChange: e => this.updateEntityName(e.target.value),
+      }),
+      hCompletedStatus
+    ]);
 
 
-    if(this.state.showEntityInfo){
-      hFunc = h(Popover, {
-        tippy: {
-          placement: 'top',
-          hideOnClick: false,
-          html: h(ElementInfo, {key:this.state.entity.name(), element: this.state.entity, document: this.state.document})
-        }}, [hFunc]);
-    }
 
+    hFunc = h(Popover, {
+      parent: this,
+      tippy: {
+        placement: 'top',
+        hideOnClick: false,
+        trigger: 'manual click',
+        wait: function (show, event) {
+
+          if(event.type === 'click' && self.state.entity.name().length > 0) {
+            show();
+            //update completed status and show
+            // self.state.isComplete = self.state.entity.completed();
+            // if(this.state.isComplete) {
+            //   hCompletedStatus = h('i.material-icons.entity-info-complete-icon', 'check_circle');
+            //
+            // }
+            self.updateCompleted();
+          }
+
+        },
+        // html: h(ElementInfo, {key:this.state.entity.name(), element: this.state.entity, document: this.state.document})
+        html: h(ElementInfo, {key:this.state.entity.name(), element: this.state.entity, document: this.state.document})
+      }}, [hFunc]);
 
 
 

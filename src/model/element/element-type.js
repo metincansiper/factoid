@@ -28,6 +28,9 @@ const isInteraction = type => {
     case T.EXPRESSION:
     case T.MODIFICATION:
     case T.PROTEIN_AFFECTS_CHEMICAL:
+    case T.ACTIVATION_INHIBITION:
+    case T.MOLECULAR_INTERACTION:
+    case T.TRANSLOCATION:
       return true;
     default:
       return false;

@@ -18,11 +18,11 @@ class ProteinAffectsChemical extends InteractionType {
   }
 
   setAsConsumptionOf( ppt ){
-    return this.setPariticpantAsNegative( ppt );
+    return this.setParticipantAsNegative( ppt );
   }
 
   setAsProductionOf( ppt ){
-    return this.setPariticpantAsPositive( ppt );
+    return this.setParticipantAsPositive( ppt );
   }
 
   allowedParticipantTypes(){

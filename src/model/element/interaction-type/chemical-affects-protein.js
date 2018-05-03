@@ -28,11 +28,11 @@ class ChemicalAffectsProtein extends InteractionType {
   }
 
   setAsInhibitionOf( ppt ){
-    return this.setPariticpantAsNegative( ppt );
+    return this.setParticipantAsNegative( ppt );
   }
 
   setAsActivationOf( ppt ){
-    return this.setPariticpantAsPositive( ppt );
+    return this.setParticipantAsPositive( ppt );
   }
 
   static isAllowedForInteraction( intn ){

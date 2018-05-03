@@ -2,12 +2,10 @@ const InteractionType = require('./interaction-type');
 const { PARTICIPANT_TYPE } = require('../participant-type');
 const { MODS } = require('../entity-mods');
 
-const VALUE = 'modification';
-const DISPLAY_VALUE = 'Modification';
+const VALUE = 'translocation';
+const DISPLAY_VALUE = 'Translocation';
 
-
-
-class Modification extends InteractionType {
+class Translocation extends InteractionType {
   constructor( intn ){
     super( intn );
   }
@@ -38,6 +36,24 @@ class Modification extends InteractionType {
     return this.isSigned();
   }
 
+
+  setOldLocation(val){
+    this.oldLocation = val;
+  }
+
+  getOldLocation(){
+    return this.oldLocation;
+  }
+
+  setNewLocation(val){
+    this.newLocation = val;
+  }
+
+  getNewLocation(){
+    return this.newLocation;
+  }
+
+
   static isAllowedForInteraction( intn ){
     let ppts = intn.participants();
     let isProtein = ent => true || ent.type() === 'protein';
@@ -45,38 +61,16 @@ class Modification extends InteractionType {
     return ppts.length === 2 && ppts.every( isProtein );
   }
 
-
-  setModificationType(type) {
-    this.modificationType = type;
-  }
-
-  getModificationType(){
-    return this.modificationType;
-  }
-
   toString(){
-    let tgt = this.getTarget();
-    let verb = (this.isInhibition() ? 'inhibits' : 'promotes');
+    let verb = (this.isInhibition() ? 'inhibits translocation' : 'activates translocation');
 
-    let mod;
+    let oldLoc = this.getOldLocation();
+    let newLoc = this.getNewLocation();
 
-    switch( tgt.modification().value ){
-      case MODS.PHOSPHORYLATED.value:
-        mod = 'phosphorylation';
-        break;
-      case MODS.METHYLATED.value:
-        mod = 'methylation';
-        break;
-      case MODS.UBIQUINATED.value:
-        mod = 'ubiquination';
-        break;
-      default:
-        mod = 'modification';
-        break;
-    }
 
-    let obj = `the ${mod} of`;
+    let obj = `from ${oldLoc} to ${newLoc}`;
 
+    return super.toString( `${verb} ${obj}` );
     return super.toString( `${verb} ${obj}` );
   }
 
@@ -87,4 +81,4 @@ class Modification extends InteractionType {
   get displayValue(){ return DISPLAY_VALUE; }
 }
 
-module.exports = Modification;
+module.exports = Translocation;
