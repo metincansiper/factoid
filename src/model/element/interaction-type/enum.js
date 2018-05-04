@@ -5,9 +5,6 @@ const ChemicalAffectsProtein = require('./chemical-affects-protein');
 const Expression = require('./expression');
 const Modification = require('./modification');
 const ProteinAffectsChemical = require('./protein-affects-chemical');
-const Translocation = require('./translocation');
-const ActivationInhibition = require('./activation-inhibition');
-const MolecularInteraction = require('./molecular-interaction');
 
 const INTERACTION_TYPE = Object.freeze({
   INTERACTION: General,
@@ -15,7 +12,6 @@ const INTERACTION_TYPE = Object.freeze({
   MODIFICATION: Modification,
   CHEMICAL_AFFECTS_PROTEIN: ChemicalAffectsProtein,
   PROTEIN_AFFECTS_CHEMICAL: ProteinAffectsChemical
-
 });
 
 const INTERACTION_TYPE_VALS = ( () => {

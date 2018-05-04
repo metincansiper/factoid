@@ -6,22 +6,19 @@ let EntityForm = require('./entity-form.js');
 
 class ProteinModificationForm extends InteractionForm {
 
-  // componentDidMount(){
-  //   let intn = this.state.interaction;
-  //   let rEnt = this.getEntityForParticipantIndex(1);
-  //
-  //   intn.association().setAsPromotionOf(rEnt);
-  //
-  //   intn.association().setModificationType("phosphorylation");
-  //
-  // }
 
 
   updateModificationType(val){
     let intn = this.state.interaction;
-    intn.association().setModificationType(val);
+    // intn.association().setModificationType(val);
 
+    //TODO
     this.forceUpdate();
+  }
+
+  getModificationType(){
+    //TODO
+    return "phosphorylation";
   }
 
   render(){
@@ -32,7 +29,7 @@ class ProteinModificationForm extends InteractionForm {
 
     let actVal =  intn.association().isInhibition()? "inhibits" : "activates" ;
 
-    let modVal = intn.association().getModificationType() == 'undefined' ? "phosphorylation" : intn.association().getModificationType();
+    let modVal = this.getModificationType();
 
 
     return h('div.form-interaction', [
@@ -57,14 +54,7 @@ class ProteinModificationForm extends InteractionForm {
           }}, [
           h('option', { value: 'phosphorylation' }, 'phosphorylation'),
           h('option', { value: 'methylation' }, 'methylation'),
-          h('option', { value: 'acetylation' }, 'acetylation'),
-          h('option', { value: 'amidation' }, 'amidation'),
-          h('option', { value: 'pyrrolidone carboxylic acid' }, 'pyrrolidone carboxylic acid'),
-          h('option', { value: 'isomerization' }, 'isomerization'),
-          h('option', { value: 'hydroxilation' }, 'hydroxilation'),
-          h('option', { value: 'sulfation' }, 'sulfation'),
-          h('option', { value: 'flavin-binding' }, 'flavin-binding'),
-          h('option', { value: 'cysteine oxidation and nitrosylation' }, 'cysteine oxidation and nitrosylation'),
+          h('option', { value: 'ubiquination' }, 'ubiquination'),
           h('option', { value: 'other' }, 'other')
         ])
       ]),

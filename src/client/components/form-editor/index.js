@@ -16,10 +16,10 @@ const ActionLogger = require('../action-logger');
 
 const ProteinModificationForm = require('./protein-modification-form');
 const ExpressionRegulationForm = require('./expression-regulation-form');
-const LocationChangeForm = require('./location-change-form');
 const MolecularInteractionForm = require('./molecular-interaction-form');
 const ActivationInhibitionForm = require('./activation-inhibition-form');
 
+let Interaction = require('../../../model/element/interaction');
 
 class FormEditor extends DirtyComponent {
   constructor(props){
@@ -59,8 +59,8 @@ class FormEditor extends DirtyComponent {
         logger.warn( err );
 
         return ( doc.create()
-          .then( () => logger.info('The doc was created') )
-          .catch( err => logger.error('The doc could not be created', err) )
+            .then( () => logger.info('The doc was created') )
+            .catch( err => logger.error('The doc could not be created', err) )
         );
       } )
       .then( () => doc.synch(true) )
@@ -98,18 +98,31 @@ class FormEditor extends DirtyComponent {
     });
 
     return ( Promise.try( () => el.synch() )
-      .then( () => el.create() )
-      .then( () => doc.add(el) )
-      .then( () => el )
+        .then( () => el.create() )
+        .then( () => doc.add(el) )
+        .then( () => el )
     );
   }
 
   addInteraction( data ){
-    return this.addElement( _.assign({
+
+    let doc = this.data.document;
+
+    let el = doc.factory().make({
+      data: _.assign( {
         type: 'interaction',
-        name: data.name,
-        description: ''
-    }, data) );
+
+      }, data )
+    });
+
+    return ( Promise.try( () => el.synch() )
+        .then( () => el.create() )
+        .then( () => doc.add(el) )
+        .then( () => el.associate(data.association) )
+        .then( () => el )
+
+    );
+
   }
 
 
@@ -118,7 +131,7 @@ class FormEditor extends DirtyComponent {
     let entArr = [];
 
     for(let i = 0; i < data.entityCnt; i++)
-        entArr.push(self.addElement({description: {}}));
+      entArr.push(self.addElement({description: {}}));
 
     let intn = this.addInteraction(data);
 
@@ -154,17 +167,17 @@ class FormEditor extends DirtyComponent {
     for(let i = 0; i < elsLength; i++) {
       promiseArr.push(Promise.try(() => intn.removeParticipant(els[i]))
         .then(()=>{
-          if(Object.keys(els[i].description()).length <= 1) // entity is in another interaction as well
-            doc.remove(els[i]);
-          else{
-          //  only remove this interaction's key from the description
-            let desc = els[i].description();
-            delete desc[intn.id()];
-            els[i].redescribe(desc);
-          }
+            if(Object.keys(els[i].description()).length <= 1) // entity is in another interaction as well
+              doc.remove(els[i]);
+            else{
+              //  only remove this interaction's key from the description
+              let desc = els[i].description();
+              delete desc[intn.id()];
+              els[i].redescribe(desc);
+            }
 
-        }
-      ));
+          }
+        ));
     }
 
     Promise.all(promiseArr).then( () => {
@@ -199,11 +212,10 @@ class FormEditor extends DirtyComponent {
     this.state.dirty = false;
 
     const forms = [
-      {type: 'Protein Modification' , clazz: ProteinModificationForm,entityCnt: 2, description:"One protein chemically modifies another protein.", defaultDescription: "activates-phosphorylation"},
-      {type:'Location Change', clazz: LocationChangeForm, entityCnt:2, description: "One protein activates or inhibits cellular location change in another protein.", defaultDescription: "activates translocation from"},
-      {type:'Molecular Interaction', clazz: MolecularInteractionForm, entityCnt: 2, description: "Two or more proteins physically interact.", defaultDescription: "physically interact"},
-      {type:'Activation Inhibition', clazz:ActivationInhibitionForm, entityCnt: 2, description: "A protein changes the activity status of another protein.", defaultDescription: "activates"},
-      {type:'Expression Regulation', clazz: ExpressionRegulationForm, entityCnt: 2, description: "A protein changes mRNA expression of a gene.", defaultDescription: "activates expression"}
+      {type: 'Protein Modification' , clazz: ProteinModificationForm,entityCnt: 2, description:"One protein chemically modifies another protein.", association: Interaction.ASSOCIATION.MODIFICATION},
+      {type:'Molecular Interaction', clazz: MolecularInteractionForm, entityCnt: 2, description: "Two or more proteins physically interact.", association: Interaction.ASSOCIATION.INTERACTION},
+      {type:'Activation Inhibition', clazz:ActivationInhibitionForm, entityCnt: 2, description: "A protein changes the activity status of another protein.", association: Interaction.ASSOCIATION.MODIFICATION},
+      {type:'Expression Regulation', clazz: ExpressionRegulationForm, entityCnt: 2, description: "A protein changes mRNA expression of a gene.", association: Interaction.ASSOCIATION.EXPRESSION}
     ];
 
     let hArr = [];
@@ -218,7 +230,7 @@ class FormEditor extends DirtyComponent {
               h(form.clazz, {key: interaction.id(), document:doc, interaction:interaction, description: form.type}),
               h('button.delete-interaction', { onClick: e => {self.deleteInteractionRow({interaction:interaction}); } }, 'X')
             ] );
-          else return null;
+        else return null;
       });
 
 
@@ -228,7 +240,7 @@ class FormEditor extends DirtyComponent {
         h('p', form.description),
         ...formContent,
         h('div.form-action-buttons', [
-          h('button.form-interaction-adder', { onClick: e => self.addInteractionRow({name:form.type, entityCnt:form.entityCnt,  description: form.defaultDescription})}, [
+          h('button.form-interaction-adder', { onClick: e => self.addInteractionRow({name:form.type, entityCnt:form.entityCnt,  association: form.association})}, [
             h('i.material-icons.add-new-interaction-icon', 'add'),
             'ADD INTERACTION'
           ])])

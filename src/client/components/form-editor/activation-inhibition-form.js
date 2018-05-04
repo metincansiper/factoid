@@ -19,7 +19,7 @@ class ActivationInhibitionForm extends InteractionForm{
       h(EntityForm, { entity: lEnt , placeholder: 'Source protein', document: this.state.document}),
       h('span', [
         h('select.form-options', { value: actVal, onChange: e => {this.updateActivationInhibition(e.target.value);
-        } }, [
+          } }, [
           h('option', { value: 'activates' }, 'activates'),
           h('option', { value: 'inhibits' }, 'inhibits'),
         ])
@@ -27,7 +27,7 @@ class ActivationInhibitionForm extends InteractionForm{
       h(EntityForm, { entity: rEnt, placeholder: 'Target protein' , document: this.state.document} ),
     ]);
 
-    }
+  }
 }
 
 
