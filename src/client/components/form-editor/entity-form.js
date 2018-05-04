@@ -6,7 +6,6 @@ const Popover = require('../popover/popover');
 // const Poppy = require('../popover/poppy');
 const ElementInfo = require('../element-info/element-info');
 
-
 class EntityForm extends DirtyComponent {
   constructor(props) {
     super(props);
@@ -16,8 +15,17 @@ class EntityForm extends DirtyComponent {
     }, props );
 
 
-    this.notification = new Notification({ active: true });
+
+    let self = this;
+  //listener
+    if(this.data.entity){
+      this.data.entity.on("complete", () => {
+        self.dirty();
+      });
+    }
+
   }
+
 
   updateEntityName(newName) {
     this.state.entity.name(newName);
@@ -47,11 +55,9 @@ class EntityForm extends DirtyComponent {
    */
   mergeWithOtherEntities(){
 
-    if(this.state.entity.completed()) {  //TODO: open this
+    if(this.state.entity.completed()) {
       let entity = this.state.entity;
       let mergedEntity;
-
-      //TODO : open this -- not to skip grounding
 
       //we can assume that all the other elements in the list are unique as we replace them immediately
       for(let i = 0; i < this.state.document.entities().length; i++) {
@@ -68,22 +74,7 @@ class EntityForm extends DirtyComponent {
       }
 
 
-//     //todo: opent this to skip grounding
-//       for(let i = 0; i < this.state.document.entities().length; i++) {
-//         let el = this.state.document.entities()[i];
-//         if (el.id() !== entity.id() && entity.name().length > 0 && el.name() == entity.name()) {
-//
-//             mergedEntity = el;
-// ;
-//             console.log("merging the two " + this.state.entity.id() + " and " + el.id());
-//             break;
-//           }
-//         }
-//
-
-
         // //find the entity index
-
       if(mergedEntity) {
 
         //update the interactions containing this entity
@@ -123,11 +114,6 @@ class EntityForm extends DirtyComponent {
     return true;
   }
 
-  updateCompleted(){
-    if(this.state.entity.completed())
-      this.forceUpdate();
-
-  }
   render(){
     let self = this;
     let hFunc;
@@ -141,6 +127,9 @@ class EntityForm extends DirtyComponent {
 
     hFunc = h('div.form-interaction', [
       h('input[type="text"].' + this.state.style, {
+        onMouseOver: ()=>{self.isMouseOver = true; },
+        onMouseOut: ()=>{self.isMouseOver = false;},
+        // id: 'entity-form-' + this.state.entity.id(),
         value: this.state.entity && this.state.entity.name(),
         placeholder: this.state.placeholder,
         onChange: e => this.updateEntityName(e.target.value),
@@ -151,23 +140,21 @@ class EntityForm extends DirtyComponent {
 
 
     hFunc = h(Popover, {
-      parent: this,
       tippy: {
         placement: 'top',
         hideOnClick: false,
-        trigger: 'manual click',
+        trigger: 'click mouseenter',
         wait: function (show, event) {
 
-          if(event.type === 'click' && self.state.entity.name().length > 0) {
-            show();
-            //update completed status and show
-            // self.state.isComplete = self.state.entity.completed();
-            // if(this.state.isComplete) {
-            //   hCompletedStatus = h('i.material-icons.entity-info-complete-icon', 'check_circle');
-            //
-            // }
-            self.updateCompleted();
+          let delay = 2000;
+          if(event.type === 'click') {
+            delay = 0;
           }
+
+          setTimeout(()=>{
+            if(self.state.entity.name().length > 0 && self.isMouseOver)
+                show();
+          }, delay);
 
         },
         // html: h(ElementInfo, {key:this.state.entity.name(), element: this.state.entity, document: this.state.document})
