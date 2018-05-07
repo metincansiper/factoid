@@ -43,6 +43,10 @@ class ChemicalAffectsProtein extends InteractionType {
     return ppts.length === 2 && ppts.some( isProtein ) && ppts.some( isChemical );
   }
 
+  toBiopaxTemplate(){
+    return null;
+  }
+
   toString(){
     return super.toString( this.isActivation() ? 'activates' : 'inhibits' );
   }

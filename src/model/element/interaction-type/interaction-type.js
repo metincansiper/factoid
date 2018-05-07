@@ -1,5 +1,6 @@
 const { error } = require('../../../util');
 const { PARTICIPANT_TYPE, PARTICIPANT_TYPES } = require('../participant-type');
+const { BIOPAX_TEMPLATE_TYPE, BIOPAX_CONTROL_TYPE } = require('./biopax-type');
 
 const VALUE = 'unset';
 const DISPLAY_VALUE = 'Unset';
@@ -91,19 +92,40 @@ class InteractionType {
     return ppts[0];
   }
 
-  toString(expr = 'interacts with'){
-    let intn = this.interaction;
-    let src, tgt;
+  getSourceSkipErrors(){
+    let src;
 
     try {
       src = this.getSource();
+    } catch( err ){
+      src = this.interaction.participants()[0];
+    }
+
+    return src;
+  }
+
+  getTargetSkipErrors(){
+    let tgt;
+
+    try {
       tgt = this.getTarget();
     } catch( err ){
-      let ppts = intn.participants();
-
-      src = ppts[0];
-      tgt = ppts[1];
+      tgt = this.interaction.participants()[1];
     }
+
+    return tgt;
+  }
+
+  // TODO: a better replacement for this.interaction.type()?
+  toBiopaxTemplate() {
+    throw `Abstract method toBiopaxTemplate() is not overridden for interaction type of ${this.interaction.type()}`;
+  }
+
+  toString(expr = 'interacts with'){
+    let intn = this.interaction;
+
+    let src = this.getSourceSkipErrors();
+    let tgt = this.getTargetSkipErrors();
 
     let srcName = src.name() || '(?)';
     let tgtName = tgt.name() || '(?)';

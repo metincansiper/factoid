@@ -1,10 +1,10 @@
 const InteractionType = require('./interaction-type');
 const { PARTICIPANT_TYPE } = require('../participant-type');
 const { MODS } = require('../entity-mods');
+const { BIOPAX_TEMPLATE_TYPE, BIOPAX_CONTROL_TYPE } = require('./biopax-type');
 
 const VALUE = 'modification';
 const DISPLAY_VALUE = 'Modification';
-
 
 
 class Modification extends InteractionType {
@@ -45,6 +45,32 @@ class Modification extends InteractionType {
     return ppts.length === 2 && ppts.every( isProtein );
   }
 
+  toBiopaxTemplate(){
+    let source = this.getSourceSkipErrors();
+    let target = this.getTargetSkipErrors();
+
+    let srcName = source.name() || '';
+    let tgtName = target.name() || '';
+
+    let modification = target.modification().value;
+    let templateType = ( modification === MODS.UNMODIFIED.value )
+            ? BIOPAX_TEMPLATE_TYPE.ACTIVATION_INHIBITION : BIOPAX_TEMPLATE_TYPE.PROTEIN_MODIFICATION;
+
+    let controlType = this.isInhibition() ? BIOPAX_CONTROL_TYPE.INHIBITION : BIOPAX_CONTROL_TYPE.ACTIVATION;
+
+    let template = {
+      type: templateType,
+      contollerProtein: srcName,
+      targetProtein: tgtName,
+      controlType: controlType
+    };
+
+    if (templateType === BIOPAX_TEMPLATE_TYPE.PROTEIN_MODIFICATION) {
+      template.modification = modification;
+    }
+
+    return template;
+  }
 
   toString(){
     let tgt = this.getTarget();

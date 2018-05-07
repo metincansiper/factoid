@@ -43,6 +43,10 @@ class ProteinAffectsChemical extends InteractionType {
     return ppts.length === 2 && ppts.some( isProtein ) && ppts.some( isChemical );
   }
 
+  toBiopaxTemplate(){
+    return null;
+  }
+
   toString(){
     return super.toString( (this.isConsumption() ? 'consumes' : 'produces') );
   }
