@@ -179,9 +179,6 @@ class Editor extends DataComponent {
       currentChatMessage: ''
     });
 
-    this.data.chatMessages.push({'sender': 'user', 'content': 'hi there'})
-    this.data.chatMessages.push({'sender': 'clare', 'content': 'hi'})
-
     logger.info('Checking if doc with id %s already exists', doc.id());
 
     tryPromise( () => doc.load() )
