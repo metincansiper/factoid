@@ -174,8 +174,13 @@ class Editor extends DataComponent {
         ppts: [],
         oldIdToEl: new Map(),
         lastTime: 0
-      }
+      },
+      chatMessages: [],
+      currentChatMessage: ''
     });
+
+    this.data.chatMessages.push({'sender': 'user', 'content': 'hi there'})
+    this.data.chatMessages.push({'sender': 'clare', 'content': 'hi'})
 
     logger.info('Checking if doc with id %s already exists', doc.id());
 
@@ -487,8 +492,19 @@ class Editor extends DataComponent {
     this.setData({ showHelp: bool });
   }
 
+  sendChatMessage() {
+    let { currentChatMessage, chatMessages } = this.data;
+
+    if ( !currentChatMessage ) {
+      return;
+    }
+
+    chatMessages.push({'sender': 'user', 'content': currentChatMessage});
+    this.setData({currentChatMessage: ''});
+  }
+
   render(){
-    let { document, bus, showHelp } = this.data;
+    let { document, bus, showHelp, chatMessages } = this.data;
     let controller = this;
     let { history } = this.props;
 
@@ -523,6 +539,24 @@ class Editor extends DataComponent {
       h(EditorButtons, { className: 'editor-buttons', controller, document, bus, history }),
       h(UndoRemove, { controller, document, bus }),
       h('div.editor-graph#editor-graph'),
+      h('div.editor-chat', [
+        h('div.editor-chat-messages', chatMessages.map( message => {
+          let { sender, content } = message;
+          return h('div', [
+            h('div', sender),
+            h('div', content)
+          ]);
+        })),
+        h('input.editor-chat-text', {
+          type: 'text',
+          placeholder: 'Type your message here!',
+          onChange: e => this.setData({
+            currentChatMessage: e.target.value
+          }),
+          value: this.data.currentChatMessage
+        }),
+        h('button', { onClick: () => this.sendChatMessage() }, 'send')
+      ]),
       h('div.editor-help-background', {
         className: makeClassList({
           'editor-help-background-shown': showHelp
