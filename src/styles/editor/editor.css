@@ -144,16 +144,30 @@
   border: 1px solid;
 }
 
-.editor-chat-container {
-  /*position: relative;
-  height: auto;*/
-}
-
 .editor-chat-text {
   overflow: hidden;
   width: 100%;
   /*height: 20%;*/
   /*top: 80%;*/
+}
+
+.editor-chat-message-container {
+  border: 2px solid #dedede;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.editor-chat-message-darker {
+  border-color: #ccc;
+  background-color: #ddd;
+}
+
+.editor-chat-message-container::after {
+  content: "";
+  clear: both;
+  display: table;
 }
 
 .editor-chat-messages {

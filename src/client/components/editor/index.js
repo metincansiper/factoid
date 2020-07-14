@@ -1,4 +1,5 @@
 import DataComponent from '../data-component';
+import AutoScrollDiv from '../auto-scroll-div';
 import ReactDom from 'react-dom';
 import h from 'react-hyperscript';
 import EventEmitter from 'eventemitter3';
@@ -537,22 +538,34 @@ class Editor extends DataComponent {
       h(UndoRemove, { controller, document, bus }),
       h('div.editor-graph#editor-graph'),
       h('div.editor-chat', [
-        h('div.editor-chat-messages', chatMessages.map( message => {
-          let { sender, content } = message;
-          return h('div', [
-            h('div', sender),
-            h('div', content)
-          ]);
-        })),
+        h(AutoScrollDiv, {
+          className: 'editor-chat-messages',
+          childrenContent: chatMessages.map( message => {
+            let { sender, content } = message;
+            return h('div.editor-chat-message-container', {
+              className: makeClassList({
+                'editor-chat-message-darker': (sender == 'clare')
+              })
+            }, [
+              h('div', content)
+            ]);
+          })
+        }),
         h('input.editor-chat-text', {
           type: 'text',
           placeholder: 'Type your message here!',
           onChange: e => this.setData({
             currentChatMessage: e.target.value
           }),
+          onKeyDown: e => {
+            if (e.key === 'Enter') {
+              this.sendChatMessage();
+              this.chatScrollToBottom(e);
+            }
+          },
           value: this.data.currentChatMessage
         }),
-        h('button', { onClick: () => this.sendChatMessage() }, 'send')
+        // h('button', { onClick: () => this.sendChatMessage() }, 'send')
       ]),
       h('div.editor-help-background', {
         className: makeClassList({
