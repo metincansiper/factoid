@@ -20,6 +20,29 @@ import Syncher from '../model/syncher';
 let app = express();
 let server = http.createServer(app);
 let io = socketio(server);
+let chatIo = io.of('/clare');
+
+io.on('connection', function(client) {
+    console.log('Client connected...');
+
+    client.on('agentCurrentRoomRequest', function(cb) {
+        cb('');
+    });
+
+    client.on('agentMessage', function(message) {
+        chatIo.emit('message', message.comment);
+        console.log(message);
+    });
+});
+
+chatIo.on('connection', function(client) {
+  client.on('message', function(message) {
+    console.log('message to emit clare is ', message);
+    let comment = message;
+    let userName = 'factoid';
+    io.emit('message', {comment, userName});
+  });
+});
 
 // make sure cytoscape layouts are registered for server-side use
 regCyLayouts();

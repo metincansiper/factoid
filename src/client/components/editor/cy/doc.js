@@ -255,6 +255,7 @@ function listenToDoc({ bus, cy, document, controller }){
   let onDocAssoc = function(){
     onDoc( this, function( docEl, el ){
       if( !docEl.isInteraction() ){
+        console.log('entity assoc', docEl.name())
         reapplyAssocToCy( docEl, el );
       }
     } );

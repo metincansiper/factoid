@@ -40,11 +40,14 @@ class Editor extends DataComponent {
 
     let docSocket = io.connect('/document');
     let eleSocket = io.connect('/element');
+    let chatSocket = io.connect('/clare');
 
     let logSocketErr = (err) => logger.error('An error occurred during clientside socket communication', err);
 
     docSocket.on('error', logSocketErr);
     eleSocket.on('error', logSocketErr);
+
+    chatSocket.on('message', m => this.acceptChatMessage(m));
 
     let id = _.get( props, 'id' );
     let secret = _.get( props, 'secret' );
@@ -177,7 +180,8 @@ class Editor extends DataComponent {
         lastTime: 0
       },
       chatMessages: [],
-      currentChatMessage: ''
+      currentChatMessage: '',
+      chatSocket
     });
 
     logger.info('Checking if doc with id %s already exists', doc.id());
@@ -490,14 +494,23 @@ class Editor extends DataComponent {
     this.setData({ showHelp: bool });
   }
 
+  acceptChatMessage(message) {
+    console.log('message is', message)
+    let { chatMessages } = this.data;
+    console.log(chatMessages)
+    chatMessages.push({'sender': 'clare', 'content': message});
+    console.log(chatMessages)
+  }
+
   sendChatMessage() {
-    let { currentChatMessage, chatMessages } = this.data;
+    let { currentChatMessage, chatMessages, chatSocket } = this.data;
 
     if ( !currentChatMessage ) {
       return;
     }
 
     chatMessages.push({'sender': 'user', 'content': currentChatMessage});
+    chatSocket.emit('message', currentChatMessage);
     this.setData({currentChatMessage: ''});
   }
 
@@ -560,7 +573,6 @@ class Editor extends DataComponent {
           onKeyDown: e => {
             if (e.key === 'Enter') {
               this.sendChatMessage();
-              this.chatScrollToBottom(e);
             }
           },
           value: this.data.currentChatMessage
