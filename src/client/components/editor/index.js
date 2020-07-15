@@ -48,6 +48,8 @@ class Editor extends DataComponent {
     eleSocket.on('error', logSocketErr);
 
     chatSocket.on('message', m => this.acceptChatMessage(m));
+    // chatSocket.on('message2', m => this.setChatInteractions(m + ' second'));
+    chatSocket.on('intnresults', intns => this.setChatInteractions(intns));
 
     let id = _.get( props, 'id' );
     let secret = _.get( props, 'secret' );
@@ -181,7 +183,8 @@ class Editor extends DataComponent {
       },
       chatMessages: [],
       currentChatMessage: '',
-      chatSocket
+      chatSocket,
+      chatInteractions: null
     });
 
     logger.info('Checking if doc with id %s already exists', doc.id());
@@ -513,6 +516,11 @@ class Editor extends DataComponent {
     chatMessages.push({'sender': 'user', 'content': currentChatMessage});
     chatSocket.emit('message', currentChatMessage);
     this.setData({currentChatMessage: ''});
+  }
+
+  setChatInteractions(intns) {
+    console.log('set chat intns', intns);
+    this.setData({chatInteractions: intns});
   }
 
   render(){

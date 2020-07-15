@@ -2,6 +2,7 @@ import _ from 'lodash';
 import * as defs from './defs';
 import onKey from './on-key';
 import { isInteractionNode, makeCyEles, cyUpdateParent, tryPromise } from '../../../../util';
+import io from 'socket.io-client';
 
 function listenToDoc({ bus, cy, document, controller }){
   let complexWaitMap = new Map();
@@ -256,10 +257,22 @@ function listenToDoc({ bus, cy, document, controller }){
     onDoc( this, function( docEl, el ){
       if( !docEl.isInteraction() ){
         console.log('entity assoc', docEl.name())
+        askForInteractions( docEl );
         reapplyAssocToCy( docEl, el );
       }
     } );
   };
+
+  let askForInteractions = function(docEl){
+    let chatSocket = io.connect('/clare');
+    let otherEntities = document.entities().filter( otherEl => otherEl.id() != docEl.id() );
+    let entity = docEl.name();
+    otherEntities = otherEntities.map( e => e.name() ).filter( n => n != '' && n != entity );
+    otherEntities = [ ...new Set(otherEntities) ];
+
+
+    chatSocket.emit('search_intns', {entity, otherEntities});
+  }
 
   let onDocUnassoc = function(){
     onDoc( this, function( docEl, el ){

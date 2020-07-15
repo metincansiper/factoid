@@ -33,6 +33,12 @@ io.on('connection', function(client) {
         chatIo.emit('message', message.comment);
         console.log(message);
     });
+
+    client.on('agentReportInteractions', function(data) {
+        chatIo.emit('intnresults', data.intns);
+        // chatIo.emit('message2', 'trial');
+        console.log(data);
+    });
 });
 
 chatIo.on('connection', function(client) {
@@ -41,6 +47,11 @@ chatIo.on('connection', function(client) {
     let comment = message;
     let userName = 'factoid';
     io.emit('message', {comment, userName});
+  });
+
+  client.on('search_intns', function(data) {
+    console.log('search intns from clare with ', data);
+    io.emit('search_intns', data);
   });
 });
 
