@@ -499,6 +499,7 @@ class Editor extends DataComponent {
     let { chatMessages } = this.data;
     console.log(chatMessages)
     chatMessages.push({'sender': 'clare', 'content': message});
+    this.setData({chatMessages});
     console.log(chatMessages)
   }
 
