@@ -39,6 +39,12 @@ io.on('connection', function(client) {
         // chatIo.emit('message2', 'trial');
         console.log(data);
     });
+
+    client.on('agentAddInteractionRequest', function(data) {
+        chatIo.emit('addintn', data.n);
+        // chatIo.emit('message2', 'trial');
+        console.log(data);
+    });
 });
 
 chatIo.on('connection', function(client) {

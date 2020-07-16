@@ -12,6 +12,7 @@ import { DEMO_ID, DEMO_SECRET, DEMO_AUTHOR_EMAIL, EMAIL_CONTEXT_SIGNUP, DOI_LINK
 import { getId, defer, makeClassList, tryPromise } from '../../../util';
 import Document from '../../../model/document';
 import { PARTICIPANT_TYPE } from '../../../model/element/participant-type';
+import { INTERACTION_TYPE } from '../../../model/element/interaction-type/enum';
 
 import Popover from '../popover/popover';
 
@@ -29,6 +30,16 @@ const RM_DEBOUNCE_TIME = 500;
 const RM_AVAIL_DURATION = 5000;
 
 const keyEmitter = new EventEmitter();
+
+const PC_TRANSCRIPTION_TRANSLATION_TYPES = ['CONTROLS_EXPRESSION_OF'];
+const PC_MODIFICATION_TYPES = ['CONTROLS_STATE_CHANGE_OF'];
+const PC_BINDING_TYPES = ['INTERACTS_WITH', 'NEIGHBOR_OF', 'REACTS_WITH', 'IN_COMPLEX_WITH'];
+const PC_DIRECTED_TYPES = [
+  'CONTROLS_STATE_CHANGE_OF', 'CONTROLS_PHOSPHORYLATION_OF', 'CONTROLS_TRANSPORT_OF',
+  'CONTROLS_EXPRESSION_OF', 'CATALYSIS_PRECEDES', 'CONSUMPTION_CONTROLLED_BY',
+  'CONTROLS_PRODUCTION_OF', 'CONTROLS_TRANSPORT_OF_CHEMICAL', 'CHEMICAL_AFFECTS',
+  'USED_TO_PRODUCE'
+];
 
 Mousetrap.bind('escape', () => {
   keyEmitter.emit('escape');
@@ -48,8 +59,8 @@ class Editor extends DataComponent {
     eleSocket.on('error', logSocketErr);
 
     chatSocket.on('message', m => this.acceptChatMessage(m));
-    // chatSocket.on('message2', m => this.setChatInteractions(m + ' second'));
     chatSocket.on('intnresults', intns => this.setChatInteractions(intns));
+    chatSocket.on('addintn', n => this.addChatInteraction(n));
 
     let id = _.get( props, 'id' );
     let secret = _.get( props, 'secret' );
@@ -521,6 +532,50 @@ class Editor extends DataComponent {
   setChatInteractions(intns) {
     console.log('set chat intns', intns);
     this.setData({chatInteractions: intns});
+  }
+
+  addChatInteraction(n) {
+    console.log('add chat interaction', n)
+    let { chatInteractions } = this.data;
+    // handle the difference in indexing
+    let intn = chatInteractions[n - 1];
+    let type = intn.type;
+    let association = this.pcTypeToIntnAssoc(type).value;
+
+    let ppt1 = this.getEntityByName(intn.entity1);
+    let ppt2 = this.getEntityByName(intn.entity2);
+
+    let entry1 = { id: ppt1.id(), group: null };
+    let entry2 = {
+      id: ppt2.id(),
+      group: this.isDirectedPcIntnType(type) ? PARTICIPANT_TYPE.UNSIGNED.value : null
+    };
+    let entries = [ entry1, entry2 ];
+    this.addInteraction({association, entries});
+  }
+
+  getEntityByName(name) {
+    let { document } = this.data;
+    let entity = document.entities().filter( e => e.name().toLowerCase() == name.toLowerCase() )[0];
+    return entity;
+  }
+
+  isDirectedPcIntnType(pcType) {
+    _.includes(PC_DIRECTED_TYPES, pcType);
+  }
+
+  pcTypeToIntnAssoc(pcType) {
+    if (_.includes(PC_TRANSCRIPTION_TRANSLATION_TYPES, pcType)) {
+      return INTERACTION_TYPE.TRANSCRIPTION_TRANSLATION;
+    }
+    if (_.includes(PC_MODIFICATION_TYPES, pcType)) {
+      return INTERACTION_TYPE.MODIFICATION;
+    }
+    if (_.includes(PC_BINDING_TYPES, pcType)) {
+      return INTERACTION_TYPE.BINDING;
+    }
+
+    return INTERACTION_TYPE.INTERACTION;
   }
 
   render(){
