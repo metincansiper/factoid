@@ -160,6 +160,10 @@
   white-space: pre-wrap;
 }
 
+.editor-chat-message-container a {
+  text-decoration: underline;
+}
+
 .editor-chat-message-darker {
   border-color: #ccc;
   background-color: #ddd;

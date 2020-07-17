@@ -624,7 +624,7 @@ class Editor extends DataComponent {
                 'editor-chat-message-darker': (sender == 'clare')
               })
             }, [
-              h('div', content)
+              h('div', { dangerouslySetInnerHTML: {__html: content} })
             ]);
           })
         }),
