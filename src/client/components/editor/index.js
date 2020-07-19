@@ -31,14 +31,15 @@ const RM_AVAIL_DURATION = 5000;
 
 const keyEmitter = new EventEmitter();
 
-const PC_TRANSCRIPTION_TRANSLATION_TYPES = ['CONTROLS_EXPRESSION_OF'];
-const PC_MODIFICATION_TYPES = ['CONTROLS_STATE_CHANGE_OF'];
-const PC_BINDING_TYPES = ['INTERACTS_WITH', 'NEIGHBOR_OF', 'REACTS_WITH', 'IN_COMPLEX_WITH'];
+const PC_TRANSCRIPTION_TRANSLATION_TYPES = ['CONTROLS-EXPRESSION-OF'];
+const PC_MODIFICATION_TYPES = ['CONTROLS-STATE-CHANGE_OF'];
+const PC_BINDING_TYPES = ['INTERACTS-WITH', 'NEIGHBOR-OF', 'REACTS-WITH', 'IN-COMPLEX-WITH'];
+const PC_PHOSPORYLATION_TYPES = ['CONTROLS-PHOSPHORYLATION-OF'];
 const PC_DIRECTED_TYPES = [
-  'CONTROLS_STATE_CHANGE_OF', 'CONTROLS_PHOSPHORYLATION_OF', 'CONTROLS_TRANSPORT_OF',
-  'CONTROLS_EXPRESSION_OF', 'CATALYSIS_PRECEDES', 'CONSUMPTION_CONTROLLED_BY',
-  'CONTROLS_PRODUCTION_OF', 'CONTROLS_TRANSPORT_OF_CHEMICAL', 'CHEMICAL_AFFECTS',
-  'USED_TO_PRODUCE'
+  'CONTROLS-STATE-CHANGE-OF', 'CONTROLS-PHOSPHORYLATION-OF', 'CONTROLS-TRANSPORT-OF',
+  'CONTROLS-EXPRESSION-OF', 'CATALYSIS-PRECEDES', 'CONSUMPTION-CONTROLLED-BY',
+  'CONTROLS-PRODUCTION-OF', 'CONTROLS-TRANSPORT-OF-CHEMICAL', 'CHEMICAL-AFFECTS',
+  'USED-TO-PRODUCE'
 ];
 
 Mousetrap.bind('escape', () => {
@@ -539,16 +540,18 @@ class Editor extends DataComponent {
     let { chatInteractions } = this.data;
     // handle the difference in indexing
     let intn = chatInteractions[n - 1];
-    let type = intn.type;
+    let type = intn.intn;
     let association = this.pcTypeToIntnAssoc(type).value;
 
     let ppt1 = this.getEntityByName(intn.entity1);
     let ppt2 = this.getEntityByName(intn.entity2);
 
+    let group2 = this.isDirectedPcIntnType(type) ? PARTICIPANT_TYPE.POSITIVE.value : null;
+
     let entry1 = { id: ppt1.id(), group: null };
     let entry2 = {
       id: ppt2.id(),
-      group: this.isDirectedPcIntnType(type) ? PARTICIPANT_TYPE.UNSIGNED.value : null
+      group: group2
     };
     let entries = [ entry1, entry2 ];
     this.addInteraction({association, entries});
@@ -561,7 +564,7 @@ class Editor extends DataComponent {
   }
 
   isDirectedPcIntnType(pcType) {
-    _.includes(PC_DIRECTED_TYPES, pcType);
+    return _.includes(PC_DIRECTED_TYPES, pcType);
   }
 
   pcTypeToIntnAssoc(pcType) {
@@ -570,6 +573,9 @@ class Editor extends DataComponent {
     }
     if (_.includes(PC_MODIFICATION_TYPES, pcType)) {
       return INTERACTION_TYPE.MODIFICATION;
+    }
+    if (_.includes(PC_PHOSPORYLATION_TYPES, pcType)){
+      return INTERACTION_TYPE.PHOSPHORYLATION;
     }
     if (_.includes(PC_BINDING_TYPES, pcType)) {
       return INTERACTION_TYPE.BINDING;
